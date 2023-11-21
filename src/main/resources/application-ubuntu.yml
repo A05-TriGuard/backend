@@ -16,7 +16,7 @@ spring:
     password: guest
     virtual-host: /
   datasource:
-    url: jdbc:mysql://localhost:3306/triguard?useUnicode=true&characterEncoding=utf8&serverTimezone=GMT%2B8&useSSL=false
+    url: jdbc:mysql://localhost:3306/triguard?useUnicode=true&characterEncoding=utf8&serverTimezone=GMT%2B8&useSSL=false&allowPublicKeyRetrieval=true
     username: root
     password: 123456
     driver-class-name: com.mysql.cj.jdbc.Driver

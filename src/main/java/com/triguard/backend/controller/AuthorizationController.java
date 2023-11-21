@@ -11,6 +11,7 @@ import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -38,11 +39,13 @@ public class AuthorizationController {
      */
     @GetMapping("/email-code")
     @Operation(summary = "请求邮件验证码")
-    public RestBean<Void> askVerifyCode(@RequestParam @Email String email,
-                                        @RequestParam @Pattern(regexp = "(register|reset)")  String type,
-                                        HttpServletRequest request){
+    public RestBean<Void> askVerifyCode(@RequestParam @NotNull @Email String email,
+                                        @RequestParam @NotNull @Pattern(regexp = "(register|reset)")  String type,
+                                        HttpServletRequest request) {
+        if (email == null || email.isEmpty())
+            return RestBean.failure(400, "邮箱不能为空");
         return this.messageHandle(() ->
-                accountService.sendEmailVerificationCode(type, String.valueOf(email), request.getRemoteAddr()));
+                accountService.sendEmailVerificationCode(type, email, request.getRemoteAddr()));
     }
 
     /**
@@ -54,8 +57,8 @@ public class AuthorizationController {
      */
     @GetMapping("/phone-code")
     @Operation(summary = "请求短信验证码")
-    public RestBean<Void> askPhoneCode(@RequestParam @Pattern(regexp = "^1[3456789]\\d{9}$") String phone,
-                                       @RequestParam @Pattern(regexp = "(register|reset)") String type,
+    public RestBean<Void> askPhoneCode(@RequestParam @NotNull @Pattern(regexp = "^1[3456789]\\d{9}$") String phone,
+                                       @RequestParam @NotNull @Pattern(regexp = "(register|reset)") String type,
                                        HttpServletRequest request){
         return this.messageHandle(() ->
                 accountService.sendPhoneVerificationCode(type, String.valueOf(phone), request.getRemoteAddr()));

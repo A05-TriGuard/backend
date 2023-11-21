@@ -1,6 +1,7 @@
 package com.triguard.backend.entity.vo.request.Authorization;
 
 import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import lombok.Data;
 import org.hibernate.validator.constraints.Length;
@@ -10,6 +11,7 @@ import org.hibernate.validator.constraints.Length;
  */
 @Data
 public class EmailRegisterVO {
+    @NotNull
     @Email
     String email;
     @Length(max = 6, min = 6)
