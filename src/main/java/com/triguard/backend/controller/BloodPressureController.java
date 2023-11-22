@@ -3,6 +3,7 @@ package com.triguard.backend.controller;
 import com.triguard.backend.entity.RestBean;
 import com.triguard.backend.entity.dto.BloodPressure;
 import com.triguard.backend.entity.vo.request.BloodPressure.BloodPressureCreateVO;
+import com.triguard.backend.entity.vo.request.BloodPressure.BloodPressureFilterVO;
 import com.triguard.backend.entity.vo.request.BloodPressure.BloodPressureUpdateVO;
 import com.triguard.backend.service.BloodPressureService;
 import com.triguard.backend.utils.ConstUtils;
@@ -11,6 +12,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Pattern;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -70,12 +72,42 @@ public class BloodPressureController {
      * @param date 日期
      * @return 响应结果
      */
-    @GetMapping("/get")
-    @Operation(summary = "获取血压记录")
-    public RestBean<List<BloodPressure>> getBloodPressure(@RequestParam String date,
+    @GetMapping("/get-by-date")
+    @Operation(summary = "按日期获取血压记录")
+    public RestBean<List<BloodPressure>> getBloodPressure(@RequestParam @Pattern(regexp = "^\\d{4}-\\d{2}-\\d{2}$") String date,
                                            HttpServletRequest request){
         Integer accountId = (Integer) request.getAttribute(ConstUtils.ATTR_USER_ID);
         List<BloodPressure> bloodPressureList = bloodPressureService.getBloodPressure(accountId, date);
+        return RestBean.success(bloodPressureList);
+    }
+
+    /**
+     * 获取血压记录
+     * @param startDate 开始日期
+     * @param endDate 结束日期
+     * @return 响应结果
+     */
+    @GetMapping("/get-by-date-range")
+    @Operation(summary = "按日期范围获取血压记录")
+    public RestBean<List<BloodPressure>> getBloodPressure(@RequestParam @Pattern(regexp = "^\\d{4}-\\d{2}-\\d{2}$") String startDate,
+                                           @RequestParam @Pattern(regexp = "^\\d{4}-\\d{2}-\\d{2}$") String endDate,
+                                           HttpServletRequest request){
+        Integer accountId = (Integer) request.getAttribute(ConstUtils.ATTR_USER_ID);
+        List<BloodPressure> bloodPressureList = bloodPressureService.getBloodPressure(accountId, startDate, endDate);
+        return RestBean.success(bloodPressureList);
+    }
+
+    /**
+     * 获取血压记录
+     * @param vo 数据筛选表单
+     * @return 响应结果
+     */
+    @PostMapping("/get-by-filter")
+    @Operation(summary = "按条件筛选血压记录")
+    public RestBean<List<BloodPressure>> getBloodPressure(@RequestBody @Valid BloodPressureFilterVO vo,
+                                           HttpServletRequest request){
+        Integer accountId = (Integer) request.getAttribute(ConstUtils.ATTR_USER_ID);
+        List<BloodPressure> bloodPressureList = bloodPressureService.getBloodPressure(accountId, vo);
         return RestBean.success(bloodPressureList);
     }
 }

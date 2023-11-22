@@ -20,4 +20,8 @@ public class BloodPressureCreateVO {
     Integer feeling;
     @Pattern(regexp = "^[a-zA-Z0-9\\u4e00-\\u9fa5]+$")
     String remark;
+    @Pattern(regexp = "^\\d{4}-\\d{2}-\\d{2}$")
+    String date;
+    @Pattern(regexp = "^\\d{2}:\\d{2}$")
+    String time;
 }

@@ -14,6 +14,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.authentication.InsufficientAuthenticationException;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -92,11 +93,15 @@ public class SecurityConfiguration {
     private void handleProcess(HttpServletRequest request,
                                HttpServletResponse response,
                                Object exceptionOrAuthentication) throws IOException {
+        System.out.println(exceptionOrAuthentication.getClass());
         response.setContentType("application/json;charset=utf-8");
         PrintWriter writer = response.getWriter();
         if(exceptionOrAuthentication instanceof AccessDeniedException exception) {
             writer.write(RestBean
-                    .forbidden(exception.getMessage()).asJsonString());
+                    .forbidden("身份认证错误，请重新登录").asJsonString());
+        } else if (exceptionOrAuthentication instanceof InsufficientAuthenticationException exception) {
+            writer.write(RestBean
+                    .unauthorized("身份认证错误，请重新登录").asJsonString());
         } else if(exceptionOrAuthentication instanceof Exception exception) {
             writer.write(RestBean
                     .unauthorized(exception.getMessage()).asJsonString());

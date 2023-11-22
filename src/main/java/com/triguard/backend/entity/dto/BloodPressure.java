@@ -25,6 +25,8 @@ public class BloodPressure implements BaseData {
     Integer feeling;
     Integer accountId;
     String remark;
+    String date;
+    String time;
     Date createTime;
 
     public BloodPressure() {
@@ -36,6 +38,8 @@ public class BloodPressure implements BaseData {
         this.feeling = null;
         this.accountId = null;
         this.remark = null;
+        this.date = null;
+        this.time = null;
         this.createTime = null;
     }
 }
