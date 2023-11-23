@@ -4,6 +4,7 @@ import jakarta.validation.constraints.Digits;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.Pattern;
+import lombok.Builder;
 import lombok.Data;
 import org.hibernate.validator.constraints.Length;
 
@@ -33,10 +34,26 @@ public class BloodPressureFilterVO {
     Integer minHeartRate;
     @Digits(integer = 3, fraction = 0)
     Integer maxHeartRate;
-    @Length(max = 4, min = 4)
-    String arm;
-    @Length(max = 4, min = 4)
-    String feeling;
     @Length(max = 3, min = 3)
+    String arm;
+    @Length(max = 3, min = 3)
+    String feeling;
+    @Length(max = 2, min = 2)
     String remark;
+
+    public BloodPressureFilterVO() {
+        this.startDate = "1970-01-01";
+        this.endDate = "2100-01-01";
+        this.startTime = "00:00";
+        this.endTime = "23:59";
+        this.minSbp = 0;
+        this.maxSbp = 300;
+        this.minDbp = 0;
+        this.maxDbp = 300;
+        this.minHeartRate = 0;
+        this.maxHeartRate = 300;
+        this.arm = null;
+        this.feeling = null;
+        this.remark = null;
+    }
 }

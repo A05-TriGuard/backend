@@ -102,15 +102,15 @@ public class BloodPressureServiceImpl extends ServiceImpl<BloodPressureMapper, B
                 .ge("heart_rate", vo.getMinHeartRate())
                 .le("heart_rate", vo.getMaxHeartRate());
 
-        if (vo.getArm().endsWith("0")) {
+        if (vo.getArm() != null) {
             query = applyArmFilter(query, vo.getArm());
         }
 
-        if (vo.getFeeling().endsWith("0")) {
+        if (vo.getFeeling() != null) {
             query = applyFeelingFilter(query, vo.getFeeling());
         }
 
-        if (vo.getRemark().endsWith("0")) {
+        if (vo.getRemark() != null) {
             query = applyRemarkFilter(query, vo.getRemark());
         }
 

@@ -5,6 +5,7 @@ import com.triguard.backend.entity.dto.BloodPressure;
 import com.triguard.backend.entity.vo.request.BloodPressure.BloodPressureCreateVO;
 import com.triguard.backend.entity.vo.request.BloodPressure.BloodPressureFilterVO;
 import com.triguard.backend.entity.vo.request.BloodPressure.BloodPressureUpdateVO;
+import com.triguard.backend.entity.vo.response.BloodPressure.BloodPressureFilteredVO;
 import com.triguard.backend.service.BloodPressureService;
 import com.triguard.backend.utils.ConstUtils;
 import io.swagger.v3.oas.annotations.Operation;
@@ -104,10 +105,11 @@ public class BloodPressureController {
      */
     @PostMapping("/get-by-filter")
     @Operation(summary = "按条件筛选血压记录")
-    public RestBean<List<BloodPressure>> getBloodPressure(@RequestBody @Valid BloodPressureFilterVO vo,
+    public RestBean<BloodPressureFilteredVO> getBloodPressure(@RequestBody @Valid BloodPressureFilterVO vo,
                                            HttpServletRequest request){
         Integer accountId = (Integer) request.getAttribute(ConstUtils.ATTR_USER_ID);
         List<BloodPressure> bloodPressureList = bloodPressureService.getBloodPressure(accountId, vo);
-        return RestBean.success(bloodPressureList);
+        BloodPressureFilteredVO bloodPressureFilteredVO = new BloodPressureFilteredVO(bloodPressureList);
+        return RestBean.success(bloodPressureFilteredVO);
     }
 }
