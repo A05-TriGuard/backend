@@ -15,100 +15,65 @@ public class BloodPressureFilteredVO {
 
     public BloodPressureFilteredVO(List<BloodPressure> bloodPressureList) {
         this.bloodPressureList = bloodPressureList;
-        this.countedDataList = List.of(countSbp(), countDbp(), countHeartRate());
+        this.countedDataList = List.of(countData("sbp"), countData("dbp"), countData("heart_rate"));
     }
 
-    private CountedData countSbp() {
+    private CountedData countData(String name) {
         CountedData countedData = new CountedData();
-        countedData.setName("sbp");
+        countedData.setName(name);
         for (BloodPressure bloodPressure : bloodPressureList) {
-            Integer sbp = bloodPressure.getSbp();
-            if (sbp != null) {
+            Integer data = switch (name) {
+                case "sbp" -> bloodPressure.getSbp();
+                case "dbp" -> bloodPressure.getDbp();
+                case "heart_rate" -> bloodPressure.getHeartRate();
+                default -> null;
+            };
+            if (data != null) {
                 countedData.setCount(countedData.getCount() + 1);
             } else {
                 continue;
             }
-            if (countedData.getMin() == null || sbp < countedData.getMin()) {
-                countedData.setMin(sbp);
+            if (countedData.getMin() == null || data < countedData.getMin()) {
+                countedData.setMin(data);
             }
-            if (countedData.getMax() == null || sbp > countedData.getMax()) {
-                countedData.setMax(sbp);
+            if (countedData.getMax() == null || data > countedData.getMax()) {
+                countedData.setMax(data);
             }
-            countedData.setAvg(countedData.getAvg() + sbp);
-            if (sbp < 90) {
-                countedData.setLow(countedData.getLow() + 1);
-            } else if (sbp < 120) {
-                countedData.setMedium(countedData.getMedium() + 1);
-            } else if (sbp < 140) {
-                countedData.setHigh(countedData.getHigh() + 1);
-            } else {
-                countedData.setAbnormal(countedData.getAbnormal() + 1);
-            }
-        }
-        if (countedData.getCount() != 0) {
-            countedData.setAvg(countedData.getAvg() / countedData.getCount());
-        }
-        return countedData;
-    }
-
-    private CountedData countDbp() {
-        CountedData countedData = new CountedData();
-        countedData.setName("dbp");
-        for (BloodPressure bloodPressure : bloodPressureList) {
-            Integer dbp = bloodPressure.getDbp();
-            if (dbp != null) {
-                countedData.setCount(countedData.getCount() + 1);
-            } else {
-                continue;
-            }
-            if (countedData.getMin() == null || dbp < countedData.getMin()) {
-                countedData.setMin(dbp);
-            }
-            if (countedData.getMax() == null || dbp > countedData.getMax()) {
-                countedData.setMax(dbp);
-            }
-            countedData.setAvg(countedData.getAvg() + dbp);
-            if (dbp < 60) {
-                countedData.setLow(countedData.getLow() + 1);
-            } else if (dbp < 80) {
-                countedData.setMedium(countedData.getMedium() + 1);
-            } else if (dbp < 90) {
-                countedData.setHigh(countedData.getHigh() + 1);
-            } else {
-                countedData.setAbnormal(countedData.getAbnormal() + 1);
-            }
-        }
-        if (countedData.getCount() != 0) {
-            countedData.setAvg(countedData.getAvg() / countedData.getCount());
-        }
-        return countedData;
-    }
-
-    private CountedData countHeartRate() {
-        CountedData countedData = new CountedData();
-        countedData.setName("heart_rate");
-        for (BloodPressure bloodPressure : bloodPressureList) {
-            Integer heartRate = bloodPressure.getHeartRate();
-            if (heartRate != null) {
-                countedData.setCount(countedData.getCount() + 1);
-            } else {
-                continue;
-            }
-            if (countedData.getMin() == null || heartRate < countedData.getMin()) {
-                countedData.setMin(heartRate);
-            }
-            if (countedData.getMax() == null || heartRate > countedData.getMax()) {
-                countedData.setMax(heartRate);
-            }
-            countedData.setAvg(countedData.getAvg() + heartRate);
-            if (heartRate < 60) {
-                countedData.setLow(countedData.getLow() + 1);
-            } else if (heartRate < 100) {
-                countedData.setMedium(countedData.getMedium() + 1);
-            } else if (heartRate < 120) {
-                countedData.setHigh(countedData.getHigh() + 1);
-            } else {
-                countedData.setAbnormal(countedData.getAbnormal() + 1);
+            countedData.setAvg(countedData.getAvg() + data);
+            switch (name) {
+                case "sbp" -> {
+                    if (data < 90) {
+                        countedData.setLow(countedData.getLow() + 1);
+                    } else if (data < 120) {
+                        countedData.setMedium(countedData.getMedium() + 1);
+                    } else if (data < 140) {
+                        countedData.setHigh(countedData.getHigh() + 1);
+                    } else {
+                        countedData.setAbnormal(countedData.getAbnormal() + 1);
+                    }
+                }
+                case "dbp" -> {
+                    if (data < 60) {
+                        countedData.setLow(countedData.getLow() + 1);
+                    } else if (data < 80) {
+                        countedData.setMedium(countedData.getMedium() + 1);
+                    } else if (data < 90) {
+                        countedData.setHigh(countedData.getHigh() + 1);
+                    } else {
+                        countedData.setAbnormal(countedData.getAbnormal() + 1);
+                    }
+                }
+                case "heart_rate" -> {
+                    if (data < 60) {
+                        countedData.setLow(countedData.getLow() + 1);
+                    } else if (data < 100) {
+                        countedData.setMedium(countedData.getMedium() + 1);
+                    } else if (data < 120) {
+                        countedData.setHigh(countedData.getHigh() + 1);
+                    } else {
+                        countedData.setAbnormal(countedData.getAbnormal() + 1);
+                    }
+                }
             }
         }
         if (countedData.getCount() != 0) {
