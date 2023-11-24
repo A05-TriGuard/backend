@@ -26,5 +26,8 @@ public final class ConstUtils {
     public final static String MQ_SMS = "sms";
     //用户角色
     public final static String ROLE_DEFAULT = "user";
-
+    //药品搜索历史
+    public final static String SEARCH_HISTORY = "search:history:";
+    //药品信息获取历史
+    public final static String GET_MEDICINE_INFO_HISTORY = "get:medicine:info:history:";
 }

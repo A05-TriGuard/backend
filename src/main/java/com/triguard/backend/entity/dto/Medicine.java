@@ -1,6 +1,7 @@
 package com.triguard.backend.entity.dto;
 
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.triguard.backend.entity.BaseData;
@@ -18,12 +19,15 @@ public class Medicine implements BaseData {
     Integer id;
     String name;
     String component;
+    @TableField("`usage`")
     String usage;
     String caution;
     String sideEffect;
     String interaction;
     String expiry;
+    @TableField("`condition`")
     String condition;
+    @TableField("`image`")
     String image;
 
     public Medicine() {
