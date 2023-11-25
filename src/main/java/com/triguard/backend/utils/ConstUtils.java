@@ -27,7 +27,11 @@ public final class ConstUtils {
     //用户角色
     public final static String ROLE_DEFAULT = "user";
     //药品搜索历史
-    public final static String SEARCH_HISTORY = "search:history:";
+    public final static String SEARCH_MEDICINE_HISTORY = "search:medicine:history:";
     //药品信息获取历史
     public final static String GET_MEDICINE_INFO_HISTORY = "get:medicine:info:history:";
+    //食物搜索历史
+    public final static String SEARCH_FOOD_HISTORY = "search:food:history:";
+    //食物信息获取历史
+    public final static String GET_FOOD_INFO_HISTORY = "get:food:info:history:";
 }

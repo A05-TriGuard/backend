@@ -5,11 +5,13 @@ import com.triguard.backend.entity.dto.Medicine;
 import com.triguard.backend.entity.vo.response.Medicine.SimpleMedicineInfoVO;
 import com.triguard.backend.service.MedicineService;
 import com.triguard.backend.utils.ConstUtils;
+import com.triguard.backend.utils.HistoryUtils;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.constraints.NotNull;
+import org.springframework.beans.BeanUtils;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,6 +29,9 @@ public class MedicineController {
     @Resource
     MedicineService medicineService;
 
+    @Resource
+    HistoryUtils historyUtils;
+
     /**
      * 查找药品
      * @param keyword 关键词
@@ -40,11 +45,10 @@ public class MedicineController {
         List<Medicine> medicines = medicineService.searchMedicine(keyword);
         List<SimpleMedicineInfoVO> simpleMedicineInfoVOS = medicines.stream().map(medicine -> {
             SimpleMedicineInfoVO simpleMedicineInfoVO = new SimpleMedicineInfoVO();
-            simpleMedicineInfoVO.setId(medicine.getId());
-            simpleMedicineInfoVO.setName(medicine.getName());
+            BeanUtils.copyProperties(medicine, simpleMedicineInfoVO);
             return simpleMedicineInfoVO;
         }).toList();
-        medicineService.saveSearchHistory(accountId, keyword);
+        historyUtils.saveStringHistory(ConstUtils.SEARCH_MEDICINE_HISTORY + accountId, keyword);
         return RestBean.success(simpleMedicineInfoVOS);
     }
 
@@ -56,7 +60,7 @@ public class MedicineController {
     @Operation(summary = "获取当前用户查找药品记录", description = "获取当前用户查找药品记录。")
     public RestBean<List<String>> getSearchHistory(HttpServletRequest request){
         Integer accountId = (Integer) request.getAttribute(ConstUtils.ATTR_USER_ID);
-        return RestBean.success(medicineService.getSearchHistory(accountId));
+        return RestBean.success(historyUtils.getStringHistory(ConstUtils.SEARCH_MEDICINE_HISTORY + accountId));
     }
 
     /**
@@ -69,7 +73,7 @@ public class MedicineController {
     public RestBean<Medicine> getMedicineInfo(@RequestParam @NotNull Integer id,
                                               HttpServletRequest request){
         Integer accountId = (Integer) request.getAttribute(ConstUtils.ATTR_USER_ID);
-        medicineService.saveGetMedicineInfoHistory(accountId, id);
+        historyUtils.saveIntegerHistory(ConstUtils.GET_MEDICINE_INFO_HISTORY + accountId, id);
         return RestBean.success(medicineService.getById(id));
     }
 
@@ -81,12 +85,14 @@ public class MedicineController {
     @Operation(summary = "获取当前用户查看药品信息记录", description = "获取当前用户查看药品信息记录。")
     public RestBean<List<SimpleMedicineInfoVO>> getGetMedicineInfoHistory(HttpServletRequest request){
         Integer accountId = (Integer) request.getAttribute(ConstUtils.ATTR_USER_ID);
-        List<Integer> medicineIds = medicineService.getGetMedicineInfoHistory(accountId);
+        List<Integer> medicineIds = historyUtils.getIntegerHistory(ConstUtils.GET_MEDICINE_INFO_HISTORY + accountId);
+        if (medicineIds == null || medicineIds.isEmpty()) {
+            return RestBean.success(new java.util.ArrayList<>());
+        }
         List<Medicine> medicines = medicineService.listByIds(medicineIds);
         List<SimpleMedicineInfoVO> simpleMedicineInfoVOS = new java.util.ArrayList<>(medicines.stream().map(medicine -> {
             SimpleMedicineInfoVO simpleMedicineInfoVO = new SimpleMedicineInfoVO();
-            simpleMedicineInfoVO.setId(medicine.getId());
-            simpleMedicineInfoVO.setName(medicine.getName());
+            BeanUtils.copyProperties(medicine, simpleMedicineInfoVO);
             return simpleMedicineInfoVO;
         }).toList());
         simpleMedicineInfoVOS.sort((o1, o2) -> o2.getId() - o1.getId());
