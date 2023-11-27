@@ -5,8 +5,8 @@ springdoc:
 spring:
   mail:
     host: smtp.qq.com
-    username: 2374530749@qq.com
-    password: labuzvkosnpxeacf
+    username: triguard@qq.com
+    password: vbtguzwuotrudged
   rabbitmq:
     addresses: localhost
     username: guest

@@ -2,7 +2,10 @@ package com.triguard.backend.controller;
 
 import com.triguard.backend.entity.RestBean;
 import com.triguard.backend.entity.dto.Food;
+import com.triguard.backend.entity.dto.FoodFavorites;
+import com.triguard.backend.entity.vo.response.Food.FoodInfoVO;
 import com.triguard.backend.entity.vo.response.Food.SimpleFoodInfoVO;
+import com.triguard.backend.service.FoodFavoritesService;
 import com.triguard.backend.service.FoodService;
 import com.triguard.backend.service.MedicineService;
 import com.triguard.backend.utils.ConstUtils;
@@ -30,6 +33,9 @@ public class FoodController {
 
     @Resource
     FoodService foodService;
+
+    @Resource
+    FoodFavoritesService foodFavoritesService;
 
     @Resource
     HistoryUtils historyUtils;
@@ -72,11 +78,15 @@ public class FoodController {
      */
     @GetMapping("/info")
     @Operation(summary = "获取食物信息", description = "根据食物id获取食物信息。")
-    public RestBean<Food> getFoodInfo(@RequestParam @NotNull Integer id,
-                                      HttpServletRequest request){
+    public RestBean<FoodInfoVO> getFoodInfo(@RequestParam @NotNull Integer id,
+                                            HttpServletRequest request){
         Integer accountId = (Integer) request.getAttribute(ConstUtils.ATTR_USER_ID);
         historyUtils.saveIntegerHistory(ConstUtils.GET_FOOD_INFO_HISTORY + accountId, id);
-        return RestBean.success(foodService.getById(id));
+        Food food = foodService.getById(id);
+        FoodInfoVO foodInfoVO = new FoodInfoVO();
+        BeanUtils.copyProperties(food, foodInfoVO);
+        foodInfoVO.setIsFavorite(foodFavoritesService.getFoodFavorites(accountId, id) != null);
+        return RestBean.success(foodInfoVO);
     }
 
     /**
@@ -95,6 +105,53 @@ public class FoodController {
         List<SimpleFoodInfoVO> simpleFoodInfoVOS = new java.util.ArrayList<>(foods.stream().map(food -> {
             SimpleFoodInfoVO simpleFoodInfoVO = new SimpleFoodInfoVO();
             BeanUtils.copyProperties(food, simpleFoodInfoVO);
+            return simpleFoodInfoVO;
+        }).toList());
+        simpleFoodInfoVOS.sort((o1, o2) -> o2.getId() - o1.getId());
+        return RestBean.success(simpleFoodInfoVOS);
+    }
+
+    /**
+     * 添加食物收藏
+     * @return 响应结果
+     */
+    @PostMapping("/favorites/add")
+    @Operation(summary = "添加食物收藏", description = "添加食物收藏。")
+    public RestBean<FoodFavorites> addFoodFavorites(@RequestParam @NotNull Integer foodId,
+                                                    HttpServletRequest request){
+        Integer accountId = (Integer) request.getAttribute(ConstUtils.ATTR_USER_ID);
+        FoodFavorites foodFavorites = foodFavoritesService.addFoodFavorites(accountId, foodId);
+        if (foodFavorites != null) {
+            return RestBean.success(foodFavorites);
+        }
+        return RestBean.failure(400, "添加失败");
+    }
+
+    /**
+     * 删除食物收藏
+     * @return 响应结果
+     */
+    @GetMapping("/favorites/delete")
+    @Operation(summary = "删除食物收藏", description = "删除食物收藏。")
+    public RestBean<Void> deleteFoodFavorites(@RequestParam @NotNull Integer foodId,
+                                              HttpServletRequest request){
+        Integer accountId = (Integer) request.getAttribute(ConstUtils.ATTR_USER_ID);
+        boolean isSuccess = foodFavoritesService.deleteFoodFavorites(accountId, foodId);
+        return isSuccess ? RestBean.success() : RestBean.failure(400, "删除失败");
+    }
+
+    /**
+     * 获取食物收藏列表
+     * @return 响应结果
+     */
+    @GetMapping("/favorites/list")
+    @Operation(summary = "获取食物收藏列表", description = "获取食物收藏列表。")
+    public RestBean<List<SimpleFoodInfoVO>> getFoodFavoritesList(HttpServletRequest request){
+        Integer accountId = (Integer) request.getAttribute(ConstUtils.ATTR_USER_ID);
+        List<FoodFavorites> foodFavorites = foodFavoritesService.getFoodFavorites(accountId);
+        List<SimpleFoodInfoVO> simpleFoodInfoVOS = new java.util.ArrayList<>(foodFavorites.stream().map(foodFavorite -> {
+            SimpleFoodInfoVO simpleFoodInfoVO = new SimpleFoodInfoVO();
+            BeanUtils.copyProperties(foodService.getById(foodFavorite.getFoodId()), simpleFoodInfoVO);
             return simpleFoodInfoVO;
         }).toList());
         simpleFoodInfoVOS.sort((o1, o2) -> o2.getId() - o1.getId());

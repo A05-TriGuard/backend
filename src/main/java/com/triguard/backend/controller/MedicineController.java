@@ -2,7 +2,10 @@ package com.triguard.backend.controller;
 
 import com.triguard.backend.entity.RestBean;
 import com.triguard.backend.entity.dto.Medicine;
+import com.triguard.backend.entity.dto.MedicineFavorites;
+import com.triguard.backend.entity.vo.response.Medicine.MedicineInfoVO;
 import com.triguard.backend.entity.vo.response.Medicine.SimpleMedicineInfoVO;
+import com.triguard.backend.service.MedicineFavoritesService;
 import com.triguard.backend.service.MedicineService;
 import com.triguard.backend.utils.ConstUtils;
 import com.triguard.backend.utils.HistoryUtils;
@@ -28,6 +31,9 @@ public class MedicineController {
 
     @Resource
     MedicineService medicineService;
+
+    @Resource
+    MedicineFavoritesService medicineFavoritesService;
 
     @Resource
     HistoryUtils historyUtils;
@@ -70,11 +76,15 @@ public class MedicineController {
      */
     @GetMapping("/info")
     @Operation(summary = "获取药品信息", description = "根据药品id获取药品信息。")
-    public RestBean<Medicine> getMedicineInfo(@RequestParam @NotNull Integer id,
+    public RestBean<MedicineInfoVO> getMedicineInfo(@RequestParam @NotNull Integer id,
                                               HttpServletRequest request){
         Integer accountId = (Integer) request.getAttribute(ConstUtils.ATTR_USER_ID);
         historyUtils.saveIntegerHistory(ConstUtils.GET_MEDICINE_INFO_HISTORY + accountId, id);
-        return RestBean.success(medicineService.getById(id));
+        Medicine medicine = medicineService.getById(id);
+        MedicineInfoVO medicineInfoVO = new MedicineInfoVO();
+        BeanUtils.copyProperties(medicine, medicineInfoVO);
+        medicineInfoVO.setIsFavorite(medicineFavoritesService.getMedicineFavorites(accountId, id) != null);
+        return RestBean.success(medicineInfoVO);
     }
 
     /**
@@ -93,6 +103,55 @@ public class MedicineController {
         List<SimpleMedicineInfoVO> simpleMedicineInfoVOS = new java.util.ArrayList<>(medicines.stream().map(medicine -> {
             SimpleMedicineInfoVO simpleMedicineInfoVO = new SimpleMedicineInfoVO();
             BeanUtils.copyProperties(medicine, simpleMedicineInfoVO);
+            return simpleMedicineInfoVO;
+        }).toList());
+        simpleMedicineInfoVOS.sort((o1, o2) -> o2.getId() - o1.getId());
+        return RestBean.success(simpleMedicineInfoVOS);
+    }
+
+    /**
+     * 添加药品收藏
+     * @param medicineId 药品id
+     * @return 响应结果
+     */
+    @PostMapping("/favorites/add")
+    @Operation(summary = "添加药品收藏", description = "添加药品收藏。")
+    public RestBean<MedicineFavorites> addMedicineFavorites(@RequestParam @NotNull Integer medicineId,
+                                                            HttpServletRequest request){
+        Integer accountId = (Integer) request.getAttribute(ConstUtils.ATTR_USER_ID);
+        MedicineFavorites medicineFavorites = medicineFavoritesService.addMedicineFavorites(accountId, medicineId);
+        if (medicineFavorites != null) {
+            return RestBean.success(medicineFavorites);
+        }
+        return RestBean.failure(400, "添加失败");
+    }
+
+    /**
+     * 删除药品收藏
+     * @param medicineId 药品id
+     * @return 响应结果
+     */
+    @GetMapping("/favorites/delete")
+    @Operation(summary = "删除药品收藏", description = "删除药品收藏。")
+    public RestBean<MedicineFavorites> deleteMedicineFavorites(@RequestParam @NotNull Integer medicineId,
+                                                               HttpServletRequest request){
+        Integer accountId = (Integer) request.getAttribute(ConstUtils.ATTR_USER_ID);
+        boolean isSuccess = medicineFavoritesService.deleteMedicineFavorites(accountId, medicineId);
+        return isSuccess ? RestBean.success() : RestBean.failure(400, "删除失败");
+    }
+
+    /**
+     * 获取药品收藏列表
+     * @return 响应结果
+     */
+    @GetMapping("/favorites/list")
+    @Operation(summary = "获取药品收藏列表", description = "获取药品收藏列表。")
+    public RestBean<List<SimpleMedicineInfoVO>> getMedicineFavoritesList(HttpServletRequest request){
+        Integer accountId = (Integer) request.getAttribute(ConstUtils.ATTR_USER_ID);
+        List<MedicineFavorites> medicineFavorites = medicineFavoritesService.getMedicineFavorites(accountId);
+        List<SimpleMedicineInfoVO> simpleMedicineInfoVOS = new java.util.ArrayList<>(medicineFavorites.stream().map(medicineFavorite -> {
+            SimpleMedicineInfoVO simpleMedicineInfoVO = new SimpleMedicineInfoVO();
+            BeanUtils.copyProperties(medicineService.getById(medicineFavorite.getMedicineId()), simpleMedicineInfoVO);
             return simpleMedicineInfoVO;
         }).toList());
         simpleMedicineInfoVOS.sort((o1, o2) -> o2.getId() - o1.getId());
