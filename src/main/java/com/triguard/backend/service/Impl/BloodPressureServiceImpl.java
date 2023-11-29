@@ -63,7 +63,7 @@ public class BloodPressureServiceImpl extends ServiceImpl<BloodPressureMapper, B
     public List<BloodPressure> getBloodPressure(Integer accountId, String date) {
         return this.query()
                 .eq("account_id", accountId)
-                .likeRight("create_time", date)
+                .eq("date", date)
                 .orderByDesc("create_time")
                 .list();
     }

@@ -10,8 +10,8 @@ mybatis-plus:
 spring:
   mail:
     host: smtp.qq.com
-    username: triguard@qq.com
-    password: vbtguzwuotrudged
+    username: yuc0902@qq.com
+    password: ejlwyijtqxzcdjjc
   rabbitmq:
     addresses: localhost
     username: guest

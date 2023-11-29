@@ -3,18 +3,19 @@ package com.triguard.backend.listener;
 import com.alibaba.fastjson2.JSONObject;
 import com.triguard.backend.utils.ConstUtils;
 import jakarta.annotation.Resource;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.annotation.RabbitHandler;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.mail.MailException;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Component;
 
-import java.util.Map;
-
 /**
  * 用于处理邮件发送的消息队列监听器
  */
+@Slf4j
 @Component
 @RabbitListener(queues = ConstUtils.MQ_MAIL)
 public class MailQueueListener {
@@ -46,7 +47,12 @@ public class MailQueueListener {
             default -> null;
         };
         if(message == null) return;
-        sender.send(message);
+        try {
+            sender.send(message);
+            log.info("邮件发送成功");
+        } catch (MailException e) {
+            log.error("Resolved [{}: {}]", e.getClass().getName(), e.getMessage());
+        }
     }
 
     /**

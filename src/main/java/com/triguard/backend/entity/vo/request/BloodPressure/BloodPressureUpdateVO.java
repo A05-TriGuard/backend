@@ -8,6 +8,7 @@ import lombok.Data;
  */
 @Data
 public class BloodPressureUpdateVO {
+    @NotNull
     Integer id;
     @Digits(integer = 3, fraction = 0)
     Integer sbp;
