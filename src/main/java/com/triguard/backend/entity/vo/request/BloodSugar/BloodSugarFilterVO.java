@@ -33,7 +33,7 @@ public class BloodSugarFilterVO {
         this.startTime = "00:00";
         this.endTime = "23:59";
         this.minBs = 0.0f;
-        this.maxBs = 100.0f;
+        this.maxBs = 99.9f;
         this.meal = null;
         this.feeling = null;
         this.remark = null;

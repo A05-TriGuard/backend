@@ -78,7 +78,7 @@ public class BloodSugarController {
      */
     @GetMapping("/get-by-date")
     @Operation(summary = "按日期获取血糖记录")
-    public RestBean<List<BloodSugar>> getBloodSugarByDate(@RequestParam String date,
+    public RestBean<List<BloodSugar>> getBloodSugarByDate(@RequestParam @Pattern(regexp = "^\\d{4}-\\d{2}-\\d{2}$") String date,
                                               HttpServletRequest request){
         Integer accountId = (Integer) request.getAttribute(ConstUtils.ATTR_USER_ID);
         List<BloodSugar> bloodSugarList = bloodSugarService.getBloodSugar(accountId, date);

@@ -11,18 +11,22 @@ import java.util.List;
 @Data
 public class BloodSugarFilteredVO {
     List<BloodSugar> bloodSugarList;
-    CountedData countedData;
+    List<CountedData> countedDataList;
 
     public BloodSugarFilteredVO(List<BloodSugar> bloodSugarList) {
         this.bloodSugarList = bloodSugarList;
-        this.countedData = countData();
+        this.countedDataList = List.of(countData("bs"));
     }
 
-    private CountedData countData() {
+    private CountedData countData(String name) {
         CountedData countedData = new CountedData();
+        countedData.setName(name);
         for (BloodSugar bloodSugar : bloodSugarList) {
-            Float data = bloodSugar.getBs();
             // TODO: 与血压统计数据的代码重复，可以考虑抽象出来
+            Float data = switch (name) {
+                case "bs" -> bloodSugar.getBs();
+                default -> null;
+            };
             if (data != null) {
                 countedData.setCount(countedData.getCount() + 1);
             } else {
@@ -66,6 +70,7 @@ public class BloodSugarFilteredVO {
 
     @Data
     private static class CountedData {
+        private String name;
         private Float min;
         private Float max;
         private Float avg;
@@ -76,6 +81,7 @@ public class BloodSugarFilteredVO {
         private Integer count;
 
         public CountedData() {
+            this.name = null;
             this.min = null;
             this.max = null;
             this.avg = 0.0f;

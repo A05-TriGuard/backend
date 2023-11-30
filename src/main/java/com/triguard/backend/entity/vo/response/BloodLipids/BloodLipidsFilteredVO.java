@@ -1,31 +1,32 @@
-package com.triguard.backend.entity.vo.response.BloodPressure;
+package com.triguard.backend.entity.vo.response.BloodLipids;
 
-import com.triguard.backend.entity.dto.BloodPressure;
+import com.triguard.backend.entity.dto.BloodLipids;
 import lombok.Data;
 
 import java.util.List;
 
 /**
- * 用于统计后血压数据和统计数据的返回
+ * 用于统计后血脂数据和统计数据的返回
  */
 @Data
-public class BloodPressureFilteredVO {
-    List<BloodPressure> bloodPressureList;
+public class BloodLipidsFilteredVO {
+    List<BloodLipids> bloodLipidsList;
     List<CountedData> countedDataList;
 
-    public BloodPressureFilteredVO(List<BloodPressure> bloodPressureList) {
-        this.bloodPressureList = bloodPressureList;
-        this.countedDataList = List.of(countData("sbp"), countData("dbp"), countData("heart_rate"));
+    public BloodLipidsFilteredVO(List<BloodLipids> bloodLipidsList) {
+        this.bloodLipidsList = bloodLipidsList;
+        this.countedDataList = List.of(countData("tc"), countData("tg"), countData("hdl"), countData("ldl"));
     }
 
     private CountedData countData(String name) {
         CountedData countedData = new CountedData();
         countedData.setName(name);
-        for (BloodPressure bloodPressure : bloodPressureList) {
-            Integer data = switch (name) {
-                case "sbp" -> bloodPressure.getSbp();
-                case "dbp" -> bloodPressure.getDbp();
-                case "heart_rate" -> bloodPressure.getHeartRate();
+        for (BloodLipids bloodLipids : bloodLipidsList) {
+            Float data = switch (name) {
+                case "tc" -> bloodLipids.getTc();
+                case "tg" -> bloodLipids.getTg();
+                case "hdl" -> bloodLipids.getHdl();
+                case "ldl" -> bloodLipids.getLdl();
                 default -> null;
             };
             if (data != null) {
@@ -41,34 +42,45 @@ public class BloodPressureFilteredVO {
             }
             countedData.setAvg(countedData.getAvg() + data);
             switch (name) {
-                case "sbp" -> {
-                    if (data < 90) {
+                case "tc" -> {
+                    if (data < 2.8) {
                         countedData.setLow(countedData.getLow() + 1);
-                    } else if (data < 120) {
+                    } else if (data <= 5.2) {
                         countedData.setMedium(countedData.getMedium() + 1);
-                    } else if (data < 140) {
+                    } else if (data <= 6.5) {
                         countedData.setHigh(countedData.getHigh() + 1);
                     } else {
                         countedData.setAbnormal(countedData.getAbnormal() + 1);
                     }
                 }
-                case "dbp" -> {
-                    if (data < 60) {
+                case "tg" -> {
+                    if (data < 0.5) {
                         countedData.setLow(countedData.getLow() + 1);
-                    } else if (data < 80) {
+                    } else if (data <= 1.7)
                         countedData.setMedium(countedData.getMedium() + 1);
-                    } else if (data < 90) {
+                    else if (data <= 2.2) {
                         countedData.setHigh(countedData.getHigh() + 1);
                     } else {
                         countedData.setAbnormal(countedData.getAbnormal() + 1);
                     }
                 }
-                case "heart_rate" -> {
-                    if (data < 60) {
+                case "hdl" -> {
+                    if (data < 1.0) {
                         countedData.setLow(countedData.getLow() + 1);
-                    } else if (data < 100) {
+                    } else if (data <= 1.5) {
                         countedData.setMedium(countedData.getMedium() + 1);
-                    } else if (data < 120) {
+                    } else if (data <= 3.0) {
+                        countedData.setHigh(countedData.getHigh() + 1);
+                    } else {
+                        countedData.setAbnormal(countedData.getAbnormal() + 1);
+                    }
+                }
+                case "ldl" -> {
+                    if (data < 2.0) {
+                        countedData.setLow(countedData.getLow() + 1);
+                    } else if (data <= 3.3) {
+                        countedData.setMedium(countedData.getMedium() + 1);
+                    } else if (data <= 4.1) {
                         countedData.setHigh(countedData.getHigh() + 1);
                     } else {
                         countedData.setAbnormal(countedData.getAbnormal() + 1);
@@ -83,15 +95,15 @@ public class BloodPressureFilteredVO {
     }
 
     @Data
-    private static class CountedData{
-        private String name = null;
-        private Integer min = null;
-        private Integer max = null;
-        private Integer avg = 0;
-        private Integer high = 0;
-        private Integer medium = 0;
-        private Integer low = 0;
-        private Integer abnormal = 0;
-        private Integer count = 0;
+    private static class CountedData {
+        String name;
+        Integer count = 0;
+        Float min = null;
+        Float max = null;
+        Float avg = 0f;
+        Integer low = 0;
+        Integer medium = 0;
+        Integer high = 0;
+        Integer abnormal = 0;
     }
 }
