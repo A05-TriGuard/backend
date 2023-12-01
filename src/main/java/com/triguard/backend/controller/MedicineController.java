@@ -18,7 +18,9 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 用于药品相关Controller包含用户的药品信息的查找，管理员可以进行增删改查
@@ -96,16 +98,19 @@ public class MedicineController {
     public RestBean<List<SimpleMedicineInfoVO>> getGetMedicineInfoHistory(HttpServletRequest request){
         Integer accountId = (Integer) request.getAttribute(ConstUtils.ATTR_USER_ID);
         List<Integer> medicineIds = historyUtils.getIntegerHistory(ConstUtils.GET_MEDICINE_INFO_HISTORY + accountId);
+        System.out.println(medicineIds);
         if (medicineIds == null || medicineIds.isEmpty()) {
             return RestBean.success(new java.util.ArrayList<>());
         }
         List<Medicine> medicines = medicineService.listByIds(medicineIds);
-        List<SimpleMedicineInfoVO> simpleMedicineInfoVOS = new java.util.ArrayList<>(medicines.stream().map(medicine -> {
-            SimpleMedicineInfoVO simpleMedicineInfoVO = new SimpleMedicineInfoVO();
-            BeanUtils.copyProperties(medicine, simpleMedicineInfoVO);
-            return simpleMedicineInfoVO;
-        }).toList());
-        simpleMedicineInfoVOS.sort((o1, o2) -> o2.getId() - o1.getId());
+        List<SimpleMedicineInfoVO> simpleMedicineInfoVOS = medicines.stream()
+                .sorted(Comparator.comparingInt(m -> medicineIds.indexOf(m.getId())))
+                .map(medicine -> {
+                    SimpleMedicineInfoVO simpleMedicineInfoVO = new SimpleMedicineInfoVO();
+                    BeanUtils.copyProperties(medicine, simpleMedicineInfoVO);
+                    return simpleMedicineInfoVO;
+                })
+                .collect(Collectors.toList());
         return RestBean.success(simpleMedicineInfoVOS);
     }
 

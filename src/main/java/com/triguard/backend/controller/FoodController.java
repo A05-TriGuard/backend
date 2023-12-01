@@ -20,6 +20,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -102,12 +103,13 @@ public class FoodController {
             return RestBean.success(new ArrayList<>());
         }
         List<Food> foods = foodService.listByIds(foodIds);
-        List<SimpleFoodInfoVO> simpleFoodInfoVOS = new java.util.ArrayList<>(foods.stream().map(food -> {
-            SimpleFoodInfoVO simpleFoodInfoVO = new SimpleFoodInfoVO();
-            BeanUtils.copyProperties(food, simpleFoodInfoVO);
-            return simpleFoodInfoVO;
-        }).toList());
-        simpleFoodInfoVOS.sort((o1, o2) -> o2.getId() - o1.getId());
+        List<SimpleFoodInfoVO> simpleFoodInfoVOS = foods.stream()
+                .sorted(Comparator.comparingInt(m -> foodIds.indexOf(m.getId())))
+                .map(food -> {
+                    SimpleFoodInfoVO simpleFoodInfoVO = new SimpleFoodInfoVO();
+                    BeanUtils.copyProperties(food, simpleFoodInfoVO);
+                    return simpleFoodInfoVO;
+                }).toList();
         return RestBean.success(simpleFoodInfoVOS);
     }
 
