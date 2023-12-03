@@ -13,11 +13,12 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Valid
+@Validated
 @RestController
 @RequestMapping("/api/blood-lipids")
 @Tag(name = "血脂相关", description = "包括用户血脂信息的增删改查。")
