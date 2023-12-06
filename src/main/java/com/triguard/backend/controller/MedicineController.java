@@ -28,7 +28,7 @@ import java.util.stream.Collectors;
 @Validated
 @RestController
 @RequestMapping("/api/medicine")
-@Tag(name = "药品相关", description = "包括用户药品信息的查找，管理员可以进行增删改查。")
+@Tag(name = "药品相关接口")
 public class MedicineController {
 
     @Resource
@@ -46,7 +46,7 @@ public class MedicineController {
      * @return 响应结果
      */
     @GetMapping("/search")
-    @Operation(summary = "查找药品", description = "根据关键词查找药品。")
+    @Operation(summary = "根据关键词搜索药品")
     public RestBean<List<SimpleMedicineInfoVO>> searchMedicine(@RequestParam @NotNull String keyword,
                                                                HttpServletRequest request){
         Integer accountId = (Integer) request.getAttribute(ConstUtils.ATTR_USER_ID);
@@ -65,7 +65,7 @@ public class MedicineController {
      * @return 响应结果
      */
     @GetMapping("/search-history")
-    @Operation(summary = "获取当前用户查找药品记录", description = "获取当前用户查找药品记录。")
+    @Operation(summary = "获取当前用户查找药品记录")
     public RestBean<List<String>> getSearchHistory(HttpServletRequest request){
         Integer accountId = (Integer) request.getAttribute(ConstUtils.ATTR_USER_ID);
         return RestBean.success(historyUtils.getStringHistory(ConstUtils.SEARCH_MEDICINE_HISTORY + accountId));
@@ -77,7 +77,7 @@ public class MedicineController {
      * @return 响应结果
      */
     @GetMapping("/info")
-    @Operation(summary = "获取药品信息", description = "根据药品id获取药品信息。")
+    @Operation(summary = "获取药品信息")
     public RestBean<MedicineInfoVO> getMedicineInfo(@RequestParam @NotNull Integer id,
                                               HttpServletRequest request){
         Integer accountId = (Integer) request.getAttribute(ConstUtils.ATTR_USER_ID);
@@ -94,7 +94,7 @@ public class MedicineController {
      * @return 响应结果
      */
     @GetMapping("/info-history")
-    @Operation(summary = "获取当前用户查看药品信息记录", description = "获取当前用户查看药品信息记录。")
+    @Operation(summary = "获取当前用户查看药品信息记录")
     public RestBean<List<SimpleMedicineInfoVO>> getGetMedicineInfoHistory(HttpServletRequest request){
         Integer accountId = (Integer) request.getAttribute(ConstUtils.ATTR_USER_ID);
         List<Integer> medicineIds = historyUtils.getIntegerHistory(ConstUtils.GET_MEDICINE_INFO_HISTORY + accountId);
@@ -120,7 +120,7 @@ public class MedicineController {
      * @return 响应结果
      */
     @PostMapping("/favorites/add")
-    @Operation(summary = "添加药品收藏", description = "添加药品收藏。")
+    @Operation(summary = "添加药品收藏")
     public RestBean<MedicineFavorites> addMedicineFavorites(@RequestParam @NotNull Integer medicineId,
                                                             HttpServletRequest request){
         Integer accountId = (Integer) request.getAttribute(ConstUtils.ATTR_USER_ID);
@@ -137,7 +137,7 @@ public class MedicineController {
      * @return 响应结果
      */
     @GetMapping("/favorites/delete")
-    @Operation(summary = "删除药品收藏", description = "删除药品收藏。")
+    @Operation(summary = "删除药品收藏")
     public RestBean<MedicineFavorites> deleteMedicineFavorites(@RequestParam @NotNull Integer medicineId,
                                                                HttpServletRequest request){
         Integer accountId = (Integer) request.getAttribute(ConstUtils.ATTR_USER_ID);
@@ -150,7 +150,7 @@ public class MedicineController {
      * @return 响应结果
      */
     @GetMapping("/favorites/list")
-    @Operation(summary = "获取药品收藏列表", description = "获取药品收藏列表。")
+    @Operation(summary = "获取药品收藏列表")
     public RestBean<List<SimpleMedicineInfoVO>> getMedicineFavoritesList(HttpServletRequest request){
         Integer accountId = (Integer) request.getAttribute(ConstUtils.ATTR_USER_ID);
         List<MedicineFavorites> medicineFavorites = medicineFavoritesService.getMedicineFavorites(accountId);
@@ -169,7 +169,7 @@ public class MedicineController {
      * @return 响应结果
      */
     @PostMapping("/create")
-    @Operation(summary = "添加药品信息", description = "添加药品信息。")
+    @Operation(summary = "添加药品信息")
     public RestBean<Medicine> createMedicine(@RequestBody Medicine medicine){
         medicineService.save(medicine);
         return RestBean.success(medicine);

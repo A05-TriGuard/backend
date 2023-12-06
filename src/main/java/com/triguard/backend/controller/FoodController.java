@@ -29,7 +29,7 @@ import java.util.List;
 @Validated
 @RestController
 @RequestMapping("/api/food")
-@Tag(name = "食物相关", description = "包括用户食物信息的查找，管理员可以进行增删改查。")
+@Tag(name = "食物相关接口")
 public class FoodController {
 
     @Resource
@@ -42,12 +42,12 @@ public class FoodController {
     HistoryUtils historyUtils;
 
     /**
-     * 查找食物
+     * 根据关键词搜索食物
      * @param keyword 关键词
      * @return 响应结果
      */
     @GetMapping("/search")
-    @Operation(summary = "查找食物", description = "根据关键词查找食物。")
+    @Operation(summary = "根据关键词搜索食物")
     public RestBean<List<SimpleFoodInfoVO>> searchFood(@RequestParam @NotNull String keyword,
                                                        HttpServletRequest request){
         Integer accountId = (Integer) request.getAttribute(ConstUtils.ATTR_USER_ID);
@@ -62,11 +62,11 @@ public class FoodController {
     }
 
     /**
-     * 获取当前用户查找食物记录
+     * 获取当前用户搜索食物的历史记录
      * @return 响应结果
      */
     @GetMapping("/search-history")
-    @Operation(summary = "获取当前用户查找食物记录", description = "获取当前用户查找食物记录。")
+    @Operation(summary = "获取当前用户搜索食物的历史记录")
     public RestBean<List<String>> getSearchHistory(HttpServletRequest request){
         Integer accountId = (Integer) request.getAttribute(ConstUtils.ATTR_USER_ID);
         return RestBean.success(historyUtils.getStringHistory(ConstUtils.SEARCH_FOOD_HISTORY + accountId));
@@ -78,7 +78,7 @@ public class FoodController {
      * @return 响应结果
      */
     @GetMapping("/info")
-    @Operation(summary = "获取食物信息", description = "根据食物id获取食物信息。")
+    @Operation(summary = "获取食物信息")
     public RestBean<FoodInfoVO> getFoodInfo(@RequestParam @NotNull Integer id,
                                             HttpServletRequest request){
         Integer accountId = (Integer) request.getAttribute(ConstUtils.ATTR_USER_ID);
@@ -95,7 +95,7 @@ public class FoodController {
      * @return 响应结果
      */
     @GetMapping("/info-history")
-    @Operation(summary = "获取食物信息历史记录", description = "获取食物信息历史记录。")
+    @Operation(summary = "获取当前用户查看食物详细信息的历史记录")
     public RestBean<List<SimpleFoodInfoVO>> getFoodInfoHistory(HttpServletRequest request){
         Integer accountId = (Integer) request.getAttribute(ConstUtils.ATTR_USER_ID);
         List<Integer> foodIds = historyUtils.getIntegerHistory(ConstUtils.GET_FOOD_INFO_HISTORY + accountId);
@@ -118,7 +118,7 @@ public class FoodController {
      * @return 响应结果
      */
     @PostMapping("/favorites/add")
-    @Operation(summary = "添加食物收藏", description = "添加食物收藏。")
+    @Operation(summary = "收藏食物")
     public RestBean<FoodFavorites> addFoodFavorites(@RequestParam @NotNull Integer foodId,
                                                     HttpServletRequest request){
         Integer accountId = (Integer) request.getAttribute(ConstUtils.ATTR_USER_ID);
@@ -134,7 +134,7 @@ public class FoodController {
      * @return 响应结果
      */
     @GetMapping("/favorites/delete")
-    @Operation(summary = "删除食物收藏", description = "删除食物收藏。")
+    @Operation(summary = "取消收藏食物")
     public RestBean<Void> deleteFoodFavorites(@RequestParam @NotNull Integer foodId,
                                               HttpServletRequest request){
         Integer accountId = (Integer) request.getAttribute(ConstUtils.ATTR_USER_ID);
@@ -147,7 +147,7 @@ public class FoodController {
      * @return 响应结果
      */
     @GetMapping("/favorites/list")
-    @Operation(summary = "获取食物收藏列表", description = "获取食物收藏列表。")
+    @Operation(summary = "获取食物收藏列表")
     public RestBean<List<SimpleFoodInfoVO>> getFoodFavoritesList(HttpServletRequest request){
         Integer accountId = (Integer) request.getAttribute(ConstUtils.ATTR_USER_ID);
         List<FoodFavorites> foodFavorites = foodFavoritesService.getFoodFavorites(accountId);

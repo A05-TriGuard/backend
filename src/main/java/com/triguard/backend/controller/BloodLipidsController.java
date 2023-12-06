@@ -21,7 +21,7 @@ import java.util.List;
 @Validated
 @RestController
 @RequestMapping("/api/blood-lipids")
-@Tag(name = "血脂相关", description = "包括用户血脂信息的增删改查。")
+@Tag(name = "血脂相关接口")
 public class BloodLipidsController {
 
     @Resource

@@ -27,7 +27,7 @@ import java.util.List;
 @Validated
 @RestController
 @RequestMapping("/api/blood-sugar")
-@Tag(name = "血糖相关", description = "包括用户血糖信息的增删改查。")
+@Tag(name = "血糖相关接口")
 public class BloodSugarController {
 
     @Resource

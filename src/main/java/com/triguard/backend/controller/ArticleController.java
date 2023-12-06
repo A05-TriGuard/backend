@@ -12,18 +12,16 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
-import lombok.Builder;
 import org.springframework.beans.BeanUtils;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Objects;
 
 @Validated
 @RestController
 @RequestMapping("/api/article")
-@Tag(name = "文章相关", description = "包括疾病预防和科普文章信息的查找，管理员可以进行增删改查。")
+@Tag(name = "疾病预防和科普文章相关接口")
 public class ArticleController {
 
     @Resource
@@ -33,13 +31,13 @@ public class ArticleController {
     ArticleFavoritesService articleFavoritesService;
 
     /**
-     * 获取疾病预防文章
+     * 分页获取疾病预防文章列表
      * @param page 页数
      * @param size 每页大小
      * @return 疾病预防文章列表
      */
     @GetMapping("/disease/list")
-    @Operation(summary = "获取疾病预防文章列表")
+    @Operation(summary = "分页获取疾病预防文章列表")
     public RestBean<List<SimpleArticleInfoVO>> getDiseaseArticle(@RequestParam Integer page,
                                                                  @RequestParam Integer size){
         List<Article> articles = articleService.getDiseaseArticle(page, size);
@@ -52,13 +50,13 @@ public class ArticleController {
     }
 
     /**
-     * 获取科普文章
+     * 分页获取科普文章列表
      * @param page 页数
      * @param size 每页大小
      * @return 科普文章列表
      */
     @GetMapping("/science/list")
-    @Operation(summary = "获取科普文章列表")
+    @Operation(summary = "分页获取科普文章列表")
     public RestBean<List<SimpleArticleInfoVO>> getScienceArticle(@RequestParam Integer page,
                                                                  @RequestParam Integer size){
         List<Article> articles = articleService.getScienceArticle(page, size);
@@ -71,12 +69,12 @@ public class ArticleController {
     }
 
     /**
-     * 获取文章
+     * 根据id获取文章
      * @param id 文章id
      * @return 文章
      */
     @GetMapping("/get")
-    @Operation(summary = "获取文章")
+    @Operation(summary = "根据id获取文章")
     public RestBean<ArticleInfoVO> getArticle(@RequestParam Integer id,
                                               HttpServletRequest request){
         Integer accountId = (Integer) request.getAttribute(ConstUtils.ATTR_USER_ID);
@@ -92,12 +90,12 @@ public class ArticleController {
     }
 
     /**
-     * 收藏文章
+     * 根据id收藏文章
      * @param articleId 文章id
-     * @return 响应结果
+     * @return 是否收藏成功
      */
     @PostMapping("/favorites/add")
-    @Operation(summary = "收藏文章")
+    @Operation(summary = "根据id收藏文章")
     public RestBean<ArticleFavorites> addArticleFavorites(@RequestParam Integer articleId,
                                                           HttpServletRequest request){
         Integer accountId = (Integer) request.getAttribute(ConstUtils.ATTR_USER_ID);
@@ -106,12 +104,12 @@ public class ArticleController {
     }
 
     /**
-     * 取消收藏文章
+     * 根据id取消收藏文章
      * @param articleId 文章id
-     * @return 响应结果
+     * @return 是否取消成功
      */
     @GetMapping("/favorites/delete")
-    @Operation(summary = "取消收藏文章")
+    @Operation(summary = "根据id取消收藏文章")
     public RestBean<Void> deleteArticleFavorites(@RequestParam Integer articleId,
                                                  HttpServletRequest request){
         Integer accountId = (Integer) request.getAttribute(ConstUtils.ATTR_USER_ID);
@@ -120,11 +118,11 @@ public class ArticleController {
     }
 
     /**
-     * 获取收藏文章列表
-     * @return 响应结果
+     * 获取已收藏的疾病预防文章列表
+     * @return 文章列表
      */
     @GetMapping("/favorites/disease/list")
-    @Operation(summary = "获取疾病预防收藏文章列表")
+    @Operation(summary = "获取已收藏的疾病预防文章列表")
     public RestBean<List<SimpleArticleInfoVO>> getArticleFavoritesList(@RequestParam Integer page,
                                                                        @RequestParam Integer size,
                                                                        HttpServletRequest request){
@@ -144,11 +142,11 @@ public class ArticleController {
     }
 
     /**
-     * 获取科普文章列表
+     * 获取已收藏的科普文章列表
      * @return 响应结果
      */
     @GetMapping("/favorites/science/list")
-    @Operation(summary = "获取科普收藏文章列表")
+    @Operation(summary = "获取已收藏的科普文章列表")
     public RestBean<List<SimpleArticleInfoVO>> getScienceArticleFavoritesList(@RequestParam Integer page,
                                                                               @RequestParam Integer size,
                                                                               HttpServletRequest request){

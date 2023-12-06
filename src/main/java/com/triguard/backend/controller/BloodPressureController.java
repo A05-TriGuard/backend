@@ -25,7 +25,7 @@ import java.util.List;
 @Validated
 @RestController
 @RequestMapping("/api/blood-pressure")
-@Tag(name = "血压相关", description = "包括用户血压信息的增删改查。")
+@Tag(name = "血压相关接口")
 public class BloodPressureController {
     @Resource
     BloodPressureService bloodPressureService;
