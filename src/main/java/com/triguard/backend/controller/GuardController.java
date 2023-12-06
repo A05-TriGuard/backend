@@ -3,8 +3,10 @@ package com.triguard.backend.controller;
 import com.triguard.backend.entity.RestBean;
 import com.triguard.backend.entity.dto.Account;
 import com.triguard.backend.entity.dto.Guard;
-import com.triguard.backend.entity.vo.response.Guardian.GuardianInfoVO;
+import com.triguard.backend.entity.dto.GuardGroup;
+import com.triguard.backend.entity.vo.response.Guard.*;
 import com.triguard.backend.service.AccountService;
+import com.triguard.backend.service.GuardGroupService;
 import com.triguard.backend.service.GuardService;
 import com.triguard.backend.utils.ConstUtils;
 import io.swagger.v3.oas.annotations.Operation;
@@ -15,6 +17,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Stream;
 
 /**
  * 监护系统相关API
@@ -30,6 +33,9 @@ public class GuardController {
 
     @Resource
     AccountService accountService;
+
+    @Resource
+    GuardGroupService guardGroupService;
 
     /**
      * 获取监护人列表
@@ -56,16 +62,16 @@ public class GuardController {
 
     /**
      * 删除监护人
-     * @param accountId 用户ID
+     * @param guardianId 用户ID
      * @param request HTTP请求
      * @return 删除结果
      */
     @GetMapping("/guardian/delete")
     @Operation(summary = "删除监护人", description = "删除监护人")
-    public RestBean<String> deleteGuardian(@RequestParam Integer accountId,
+    public RestBean<String> deleteGuardian(@RequestParam Integer guardianId,
                                            HttpServletRequest request) {
         Integer wardId = (Integer) request.getAttribute(ConstUtils.ATTR_USER_ID);
-        String message = guardService.deleteGuardian(wardId, accountId);
+        String message = guardService.deleteGuardian(wardId, guardianId);
         if (message != null) {
             return RestBean.failure(400, message);
         }
@@ -74,18 +80,18 @@ public class GuardController {
 
     /**
      * 设置监护人昵称
-     * @param accountId 用户ID
+     * @param guardianId 用户ID
      * @param nickname 监护人昵称
      * @param request HTTP请求
      * @return 设置结果
      */
     @PostMapping("/guardian/set-nickname")
     @Operation(summary = "设置监护人昵称", description = "设置监护人昵称")
-    public RestBean<String> setGuardianNickname(@RequestParam Integer accountId,
+    public RestBean<String> setGuardianNickname(@RequestParam Integer guardianId,
                                                 @RequestParam String nickname,
                                                 HttpServletRequest request) {
         Integer wardId = (Integer) request.getAttribute(ConstUtils.ATTR_USER_ID);
-        String message = guardService.setGuardianNickname(wardId, accountId, nickname);
+        String message = guardService.setGuardianNickname(wardId, guardianId, nickname);
         if (message != null) {
             return RestBean.failure(400, message);
         }
@@ -107,6 +113,189 @@ public class GuardController {
         if (message != null) {
             return RestBean.failure(400, message);
         }
+        return RestBean.success();
+    }
+
+    /**
+     * 获取被监护人列表
+     * @param request HTTP请求
+     * @return 被监护人列表
+     */
+    @GetMapping("/ward/list")
+    @Operation(summary = "获取被监护人列表", description = "获取被监护人列表")
+    public RestBean<WardVO> getWardList(HttpServletRequest request) {
+        Integer guardianId = (Integer) request.getAttribute(ConstUtils.ATTR_USER_ID);
+        List<GuardGroup> guardGroupList = guardGroupService.getGuardGroupList(guardianId);
+        List<GuardGroupInfoVO> guardGroupInfoVOS = guardGroupList.stream().map(guardGroup -> {
+            GuardGroupInfoVO guardGroupInfoVO = new GuardGroupInfoVO();
+            guardGroupInfoVO.setGroupId(guardGroup.getId());
+            guardGroupInfoVO.setGroupName(guardGroup.getName());
+            return guardGroupInfoVO;
+        }).toList();
+        List<Guard> guardList = guardService.getWardList(guardianId);
+        List<WardInfoVO> wardInfoVOS = guardList.stream().map(guard -> {
+            WardInfoVO wardInfoVO = new WardInfoVO();
+            wardInfoVO.setAccountId(guard.getWardId());
+            wardInfoVO.setNickname(guard.getWardNickname());
+            Account account = accountService.getById(guard.getWardId());
+            wardInfoVO.setUsername(account.getUsername());
+            wardInfoVO.setEmail(account.getEmail());
+            return wardInfoVO;
+        }).toList();
+        WardVO wardVO = new WardVO(guardGroupInfoVOS, wardInfoVOS);
+        return RestBean.success(wardVO);
+    }
+
+    /**
+     * 获取被监护人邀请列表
+     * @param request HTTP请求
+     * @return 删除结果
+     */
+    @GetMapping("/ward/invitation/list")
+    @Operation(summary = "获取被监护人邀请列表", description = "获取被监护人邀请列表")
+    public RestBean<List<InvitationInfoVO>> getWardInvitationList(HttpServletRequest request) {
+        Integer guardianId = (Integer) request.getAttribute(ConstUtils.ATTR_USER_ID);
+        List<Guard> guardList = guardService.getWardInvitationList(guardianId);
+        List<InvitationInfoVO> invitationInfoVOS = guardList.stream().map(guard -> {
+            InvitationInfoVO invitationInfoVO = new InvitationInfoVO();
+            invitationInfoVO.setInvitationId(guard.getId());
+            invitationInfoVO.setWardId(guard.getWardId());
+            invitationInfoVO.setWardName(guard.getWardNickname());
+            invitationInfoVO.setInvitationTime(guard.getCreatedAt());
+            return invitationInfoVO;
+        }).toList();
+        return RestBean.success(invitationInfoVOS);
+    }
+
+    /**
+     * 接受/拒绝被监护人邀请
+     * @param invitationId 邀请ID
+     * @param request HTTP请求
+     * @return 接受结果
+     */
+    @PostMapping("/ward/invitation/accept")
+    @Operation(summary = "接受/拒绝被监护人邀请", description = "接受/拒绝被监护人邀请")
+    public RestBean<String> acceptWardInvitation(@RequestParam Integer invitationId,
+                                                 @RequestParam Boolean isAccepted,
+                                                 HttpServletRequest request) {
+        Integer guardianId = (Integer) request.getAttribute(ConstUtils.ATTR_USER_ID);
+        String message = guardService.acceptWardInvitation(guardianId, invitationId, isAccepted);
+        if (message != null) {
+            return RestBean.failure(400, message);
+        }
+        return RestBean.success();
+    }
+
+    /**
+     * 获取被监护人今日活动信息
+     * @param wardId 被监护人ID
+     * @param request HTTP请求
+     * @return 设置结果
+     */
+    @GetMapping("/ward/activity")
+    @Operation(summary = "获取被监护人今日活动信息", description = "获取被监护人今日活动信息")
+    public RestBean<WardActivityVO> getWardActivity(@RequestParam Integer wardId,
+                                                    HttpServletRequest request) {
+        Integer guardianId = (Integer) request.getAttribute(ConstUtils.ATTR_USER_ID);
+        WardActivityVO wardActivityVO = guardService.getWardActivity(guardianId, wardId);
+        return RestBean.success(wardActivityVO);
+    }
+
+    /**
+     * 删除被监护人
+     * @param wardId 被监护人ID
+     * @param request HTTP请求
+     * @return 是否成功
+     */
+    @GetMapping("/ward/delete")
+    @Operation(summary = "删除被监护人", description = "删除被监护人")
+    public RestBean<String> deleteWard(@RequestParam Integer wardId,
+                                       HttpServletRequest request) {
+        Integer guardianId = (Integer) request.getAttribute(ConstUtils.ATTR_USER_ID);
+        String message = guardService.deleteWard(guardianId, wardId);
+        if (message != null) {
+            return RestBean.failure(400, message);
+        }
+        return RestBean.success();
+    }
+
+    /**
+     * 创建监护组
+     * @param groupName 监护组名称
+     * @param wardIds wardIdList 被监护人ID列表
+     * @param request HTTP请求
+     */
+    @PostMapping("/guard-group/create")
+    @Operation(summary = "创建监护组", description = "创建监护组")
+    public RestBean<String> createGuardGroup(@RequestParam String groupName,
+                                             @RequestParam String wardIds,
+                                             HttpServletRequest request) {
+        Integer guardianId = (Integer) request.getAttribute(ConstUtils.ATTR_USER_ID);
+        List<Integer> wardIdList = Stream.of(wardIds.split(","))
+                .map(Integer::parseInt)
+                .toList();
+        String message = guardGroupService.createGuardGroup(guardianId, groupName, wardIdList);
+        if (message != null) {
+            return RestBean.failure(400, message);
+        }
+        return RestBean.success();
+    }
+
+    /**
+     * 获取监护组活动信息
+     * @return 监护组活动信息
+     */
+    @GetMapping("/guard-group/activity")
+    @Operation(summary = "获取监护组活动信息", description = "获取监护组活动信息")
+    public RestBean<GuardGroupActivityVO> getGuardGroupActivity(@RequestParam Integer groupId) {
+        GuardGroupActivityVO guardGroupActivityVO = guardGroupService.getGuardGroupActivity(groupId);
+        return RestBean.success(guardGroupActivityVO);
+    }
+
+    /**
+     * 解散监护组
+     * @return 解散结果
+     */
+    @GetMapping("/guard-group/disband")
+    @Operation(summary = "解散监护组", description = "解散监护组")
+    public RestBean<String> disbandGuardGroup(@RequestParam Integer groupId) {
+        String message = guardGroupService.deleteGuardGroup(groupId);
+        if (message != null) {
+            return RestBean.failure(400, message);
+        }
+        return RestBean.success();
+    }
+
+    /**
+     * 更改成员昵称
+     * @param groupId 监护组ID
+     * @param wardId 被监护人ID
+     * @param nickname 昵称
+     */
+    @PostMapping("/guard-group/member/set-nickname")
+    @Operation(summary = "更改成员昵称", description = "更改成员昵称")
+    public RestBean<String> setMemberNickname(@RequestParam Integer groupId,
+                                              @RequestParam Integer wardId,
+                                              @RequestParam String nickname) {
+        String message = guardGroupService.setMemberNickname(groupId, wardId, nickname);
+        if (message != null) {
+            return RestBean.failure(400, message);
+        }
+        return RestBean.success();
+    }
+
+    /**
+     * 更改群组名称
+     * @param groupId 监护组ID
+     * @param groupName 群组名称
+     */
+    @PostMapping("/guard-group/set-name")
+    @Operation(summary = "更改群组名称", description = "更改群组名称")
+    public RestBean<String> setGroupName(@RequestParam Integer groupId,
+                                         @RequestParam String groupName) {
+        GuardGroup guardGroup = guardGroupService.getById(groupId);
+        guardGroup.setName(groupName);
+        guardGroupService.updateById(guardGroup);
         return RestBean.success();
     }
 

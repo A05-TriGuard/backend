@@ -9,25 +9,19 @@ import lombok.Data;
 import java.util.Date;
 
 @Data
-@TableName("db_guard")
+@TableName("db_guard_group")
 @AllArgsConstructor
-public class Guard {
+public class GuardGroup {
     @TableId(type = IdType.AUTO)
     Integer id;
-    Integer wardId;
-    String wardNickname;
-    Integer guardianId;
-    String guardianNickname;
-    Boolean isAccepted;
+    String name;
+    String createdBy;
     Date createdAt;
 
-    public Guard() {
+    public GuardGroup() {
         this.id = null;
-        this.wardId = null;
-        this.wardNickname = null;
-        this.guardianId = null;
-        this.guardianNickname = null;
-        this.isAccepted = false;
+        this.name = null;
+        this.createdBy = null;
         this.createdAt = null;
     }
 }

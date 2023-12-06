@@ -1,19 +1,16 @@
-package com.triguard.backend.entity.vo.response.Guardian;
+package com.triguard.backend.entity.vo.response.Guard;
 
 import lombok.Data;
 
-/**
- * 监护人信息返回VO
- */
 @Data
-public class GuardianInfoVO {
+public class WardInfoVO {
     Integer accountId;
     String email;
     String username;
     String nickname;
     String image;
 
-    public GuardianInfoVO() {
+    public WardInfoVO() {
         this.accountId = null;
         this.email = null;
         this.username = null;
