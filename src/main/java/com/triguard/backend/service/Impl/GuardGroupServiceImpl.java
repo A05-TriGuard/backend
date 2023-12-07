@@ -68,6 +68,20 @@ public class GuardGroupServiceImpl extends ServiceImpl<GuardGroupMapper, GuardGr
     }
 
     /**
+     * 添加监护组成员
+     * @param groupId 监护组ID
+     * @param wardId 被监护人ID
+     * @return 添加结果
+     */
+    public String addGuardGroupMember(Integer groupId, Integer guardianId, Integer wardId) {
+        GuardGroup guardGroup = this.getById(groupId);
+        if (guardGroup == null) {
+            return "监护组不存在";
+        }
+        return guardGroupMemberService.addMember(groupId, guardianId, wardId);
+    }
+
+    /**
      * 获取监护组活动
      * @param groupId 监护组ID
      * @return 监护组活动

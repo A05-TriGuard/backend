@@ -9,7 +9,7 @@ public class InvitationInfoVO {
     Integer invitationId;
     Integer wardId;
     String wardName;
-    Date invitationTime;
+    String invitationTime;
 
     public InvitationInfoVO() {
         this.invitationId = null;

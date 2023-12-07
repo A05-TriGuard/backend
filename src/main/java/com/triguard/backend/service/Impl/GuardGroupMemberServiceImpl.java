@@ -59,18 +59,37 @@ public class GuardGroupMemberServiceImpl extends ServiceImpl<GuardGroupMemberMap
             guardianMember.setNickname(guardian.getUsername());
             this.save(guardianMember);
             for (Integer wardId : wardIdList) {
-                GuardGroupMember wardMember = new GuardGroupMember();
-                wardMember.setGroupId(groupId);
-                wardMember.setAccountId(wardId);
-                wardMember.setRole("ward");
-                wardMember.setCreatedAt(new Date());
-                Guard guard = guardService.query()
-                        .eq("ward_id", wardId)
-                        .eq("guardian_id", guardianId)
-                        .one();
-                wardMember.setNickname(guard.getWardNickname());
-                this.save(wardMember);
+                addWardMember(groupId, guardianId, wardId);
             }
+        } catch (Exception e) {
+            return "添加失败";
+        }
+        return null;
+    }
+
+    /**
+     * 添加监护组成员
+     * @param groupId 监护组ID
+     * @param wardId 被监护人ID
+     * @return 添加结果
+     */
+    public String addMember(Integer groupId, Integer guardianId, Integer wardId) {
+        return addWardMember(groupId, guardianId, wardId);
+    }
+
+    private String addWardMember(Integer groupId, Integer guardianId, Integer wardId) {
+        try {
+            GuardGroupMember wardMember = new GuardGroupMember();
+            wardMember.setGroupId(groupId);
+            wardMember.setAccountId(wardId);
+            wardMember.setRole("ward");
+            wardMember.setCreatedAt(new Date());
+            Guard guard = guardService.query()
+                    .eq("ward_id", wardId)
+                    .eq("guardian_id", guardianId)
+                    .one();
+            wardMember.setNickname(guard.getWardNickname());
+            this.save(wardMember);
         } catch (Exception e) {
             return "添加失败";
         }

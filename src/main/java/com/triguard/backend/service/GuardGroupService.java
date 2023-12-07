@@ -12,6 +12,8 @@ public interface GuardGroupService extends IService<GuardGroup> {
 
     String createGuardGroup(Integer guardianId, String groupName, List<Integer> wardIdList);
 
+    String addGuardGroupMember(Integer groupId, Integer guardianId, Integer wardId);
+
     GuardGroupActivityVO getGuardGroupActivity(Integer groupId);
 
     String deleteGuardGroup(Integer groupId);

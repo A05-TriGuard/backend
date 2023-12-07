@@ -16,6 +16,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -161,7 +162,8 @@ public class GuardController {
             invitationInfoVO.setInvitationId(guard.getId());
             invitationInfoVO.setWardId(guard.getWardId());
             invitationInfoVO.setWardName(guard.getWardNickname());
-            invitationInfoVO.setInvitationTime(guard.getCreatedAt());
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            invitationInfoVO.setInvitationTime(simpleDateFormat.format(guard.getCreatedAt()));
             return invitationInfoVO;
         }).toList();
         return RestBean.success(invitationInfoVOS);
@@ -250,6 +252,25 @@ public class GuardController {
     public RestBean<GuardGroupActivityVO> getGuardGroupActivity(@RequestParam Integer groupId) {
         GuardGroupActivityVO guardGroupActivityVO = guardGroupService.getGuardGroupActivity(groupId);
         return RestBean.success(guardGroupActivityVO);
+    }
+
+    /**
+     * 添加监护组成员
+     * @param groupId 监护组ID
+     * @param wardId 被监护人ID
+     * @return 添加结果
+     */
+    @PostMapping("/guard-group/member/add")
+    @Operation(summary = "添加监护组成员")
+    public RestBean<String> addGuardGroupMember(@RequestParam Integer groupId,
+                                                @RequestParam Integer wardId,
+                                                HttpServletRequest request) {
+        Integer guardianId = (Integer) request.getAttribute(ConstUtils.ATTR_USER_ID);
+        String message = guardGroupService.addGuardGroupMember(groupId, guardianId, wardId);
+        if (message != null) {
+            return RestBean.failure(400, message);
+        }
+        return RestBean.success();
     }
 
     /**
