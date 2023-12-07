@@ -59,7 +59,7 @@ public class GuardServiceImpl extends ServiceImpl<GuardianMapper, Guard> impleme
         if (guardian == null) {
             return "监护人不存在";
         }
-        this.removeById(guardian.getGuardianId());
+        this.removeById(guardian.getId());
         return null;
     }
 
