@@ -22,6 +22,8 @@ public interface GuardService extends IService<Guard> {
 
     WardActivityVO getWardActivity(Integer guardianId, Integer wardId);
 
+    String setWardNickname(Integer guardianId, Integer wardId, String nickname);
+
     String deleteWard(Integer guardianId, Integer wardId);
 
     String acceptWardInvitation(Integer guardianId, Integer invitationId, Boolean isAccepted);

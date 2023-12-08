@@ -15,5 +15,7 @@ public interface GuardGroupMemberService extends IService<GuardGroupMember> {
 
     void deleteByGroupId(Integer groupId);
 
+    String deleteMember(Integer groupId, Integer wardId);
+
     String addMember(Integer groupId, Integer guardianId, Integer wardId);
 }

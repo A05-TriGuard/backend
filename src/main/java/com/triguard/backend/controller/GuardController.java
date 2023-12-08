@@ -222,6 +222,26 @@ public class GuardController {
     }
 
     /**
+     * 设置被监护人昵称
+     * @param wardId 被监护人ID
+     * @param nickname 被监护人昵称
+     * @param request HTTP请求
+     * @return 设置结果
+     */
+    @PostMapping("/ward/set-nickname")
+    @Operation(summary = "设置被监护人昵称")
+    public RestBean<String> setWardNickname(@RequestParam Integer wardId,
+                                            @RequestParam String nickname,
+                                            HttpServletRequest request) {
+        Integer guardianId = (Integer) request.getAttribute(ConstUtils.ATTR_USER_ID);
+        String message = guardService.setWardNickname(guardianId, wardId, nickname);
+        if (message != null) {
+            return RestBean.failure(400, message);
+        }
+        return RestBean.success();
+    }
+
+    /**
      * 创建监护组
      * @param groupName 监护组名称
      * @param wardIds wardIdList 被监护人ID列表
@@ -249,8 +269,10 @@ public class GuardController {
      */
     @GetMapping("/guard-group/activity")
     @Operation(summary = "获取监护组活动信息")
-    public RestBean<GuardGroupActivityVO> getGuardGroupActivity(@RequestParam Integer groupId) {
-        GuardGroupActivityVO guardGroupActivityVO = guardGroupService.getGuardGroupActivity(groupId);
+    public RestBean<GuardGroupActivityVO> getGuardGroupActivity(@RequestParam Integer groupId,
+                                                                HttpServletRequest request) {
+        Integer guardianId = (Integer) request.getAttribute(ConstUtils.ATTR_USER_ID);
+        GuardGroupActivityVO guardGroupActivityVO = guardGroupService.getGuardGroupActivity(groupId, guardianId);
         return RestBean.success(guardGroupActivityVO);
     }
 
@@ -288,17 +310,16 @@ public class GuardController {
     }
 
     /**
-     * 更改成员昵称
+     * 删除监护组成员
      * @param groupId 监护组ID
      * @param wardId 被监护人ID
-     * @param nickname 昵称
+     * @return 删除结果
      */
-    @PostMapping("/guard-group/member/set-nickname")
-    @Operation(summary = "更改成员昵称")
-    public RestBean<String> setMemberNickname(@RequestParam Integer groupId,
-                                              @RequestParam Integer wardId,
-                                              @RequestParam String nickname) {
-        String message = guardGroupService.setMemberNickname(groupId, wardId, nickname);
+    @GetMapping("/guard-group/member/delete")
+    @Operation(summary = "删除监护组成员")
+    public RestBean<String> deleteGuardGroupMember(@RequestParam Integer groupId,
+                                                   @RequestParam Integer wardId) {
+        String message = guardGroupService.deleteGuardGroupMember(groupId, wardId);
         if (message != null) {
             return RestBean.failure(400, message);
         }

@@ -217,4 +217,24 @@ public class GuardServiceImpl extends ServiceImpl<GuardianMapper, Guard> impleme
         }
         return null;
     }
+
+    /**
+     * 设置被监护人昵称
+     * @param guardianId 监护人ID
+     * @param wardId 被监护人ID
+     * @param nickname 被监护人昵称
+     * @return 设置结果
+     */
+    public String setWardNickname(Integer guardianId, Integer wardId, String nickname) {
+        Guard ward = this.query()
+                .eq("guardian_id", guardianId)
+                .eq("ward_id", wardId)
+                .one();
+        if (ward == null) {
+            return "被监护人不存在";
+        }
+        ward.setWardNickname(nickname);
+        this.updateById(ward);
+        return null;
+    }
 }

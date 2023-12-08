@@ -55,8 +55,11 @@ public class GuardGroupMemberServiceImpl extends ServiceImpl<GuardGroupMemberMap
             guardianMember.setAccountId(guardianId);
             guardianMember.setRole("guardian");
             guardianMember.setCreatedAt(new Date());
-            Account guardian = accountService.getById(guardianId);
-            guardianMember.setNickname(guardian.getUsername());
+            Guard guard = guardService.query()
+                    .eq("ward_id", wardIdList.get(0))
+                    .eq("guardian_id", guardianId)
+                    .one();
+            guardianMember.setNickname(guard.getGuardianNickname());
             this.save(guardianMember);
             for (Integer wardId : wardIdList) {
                 addWardMember(groupId, guardianId, wardId);
@@ -105,6 +108,25 @@ public class GuardGroupMemberServiceImpl extends ServiceImpl<GuardGroupMemberMap
         return this.query()
                 .eq("group_id", groupId)
                 .list();
+    }
+
+    /**
+     * 删除监护组成员
+     * @param groupId 监护组ID
+     * @param wardId 被监护人ID
+     * @return 删除结果
+     */
+    public String deleteMember(Integer groupId, Integer wardId) {
+        try {
+            this.query()
+                    .eq("group_id", groupId)
+                    .eq("account_id", wardId)
+                    .one();
+            this.removeById(groupId);
+        } catch (Exception e) {
+            return "删除失败";
+        }
+        return null;
     }
 
     /**

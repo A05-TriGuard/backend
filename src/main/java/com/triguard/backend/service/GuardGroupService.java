@@ -14,10 +14,10 @@ public interface GuardGroupService extends IService<GuardGroup> {
 
     String addGuardGroupMember(Integer groupId, Integer guardianId, Integer wardId);
 
-    GuardGroupActivityVO getGuardGroupActivity(Integer groupId);
+    GuardGroupActivityVO getGuardGroupActivity(Integer groupId, Integer guardianId);
+
+    String deleteGuardGroupMember(Integer groupId, Integer wardId);
 
     String deleteGuardGroup(Integer groupId);
-
-    String setMemberNickname(Integer groupId, Integer accountId, String nickname);
 
 }

@@ -30,6 +30,9 @@ public class GuardGroupServiceImpl extends ServiceImpl<GuardGroupMapper, GuardGr
     AccountService accountService;
 
     @Resource
+    GuardService guardService;
+
+    @Resource
     BloodPressureService bloodPressureService;
 
     @Resource
@@ -86,14 +89,18 @@ public class GuardGroupServiceImpl extends ServiceImpl<GuardGroupMapper, GuardGr
      * @param groupId 监护组ID
      * @return 监护组活动
      */
-    public GuardGroupActivityVO getGuardGroupActivity(Integer groupId) {
+    public GuardGroupActivityVO getGuardGroupActivity(Integer groupId, Integer guardianId) {
         GuardGroupActivityVO guardGroupActivityVO = new GuardGroupActivityVO();
         List<GuardGroupMember> memberList = guardGroupMemberService.getMemberList(groupId);
         List<WardActivityVO.WardInfo> wardInfoList = memberList.stream()
                 .filter(member -> member.getRole().equals("ward"))
                 .map(member -> {
                     Account ward = accountService.getById(member.getAccountId());
-                    return new WardActivityVO.WardInfo(ward.getId(), ward.getEmail(), ward.getUsername(), member.getNickname(), null);
+                    Guard guard = guardService.query()
+                            .eq("guardian_id", guardianId)
+                            .eq("ward_id", ward.getId())
+                            .one();
+                    return new WardActivityVO.WardInfo(ward.getId(), ward.getEmail(), ward.getUsername(), guard.getWardNickname(), null);
                 })
                 .toList();
         guardGroupActivityVO.setWardInfos(wardInfoList);
@@ -105,17 +112,21 @@ public class GuardGroupServiceImpl extends ServiceImpl<GuardGroupMapper, GuardGr
             if (member.getRole().equals("guardian")) {
                 continue;
             }
+            Guard guard = guardService.query()
+                    .eq("guardian_id", guardianId)
+                    .eq("ward_id", member.getAccountId())
+                    .one();
             List<BloodPressure> bloodPressureList = bloodPressureService.getBloodPressure(member.getAccountId(), todayString);
             List<BloodSugar> bloodSugarList = bloodSugarService.getBloodSugar(member.getAccountId(), todayString);
             List<BloodLipids> bloodLipidsList = bloodLipidsService.getBloodLipids(member.getAccountId(), todayString);
             for (BloodPressure bloodPressure : bloodPressureList) {
-                groupMemberActivityVOS.add(new GroupMemberActivityVO(bloodPressure.getTime(), member.getNickname(), 0));
+                groupMemberActivityVOS.add(new GroupMemberActivityVO(bloodPressure.getTime(), guard.getWardNickname(), 0));
             }
             for (BloodSugar bloodSugar : bloodSugarList) {
-                groupMemberActivityVOS.add(new GroupMemberActivityVO(bloodSugar.getTime(), member.getNickname(), 1));
+                groupMemberActivityVOS.add(new GroupMemberActivityVO(bloodSugar.getTime(), guard.getWardNickname(), 1));
             }
             for (BloodLipids bloodLipids : bloodLipidsList) {
-                groupMemberActivityVOS.add(new GroupMemberActivityVO(bloodLipids.getTime(), member.getNickname(), 2));
+                groupMemberActivityVOS.add(new GroupMemberActivityVO(bloodLipids.getTime(), guard.getWardNickname(), 2));
             }
         }
         if (!groupMemberActivityVOS.isEmpty()) {
@@ -123,6 +134,20 @@ public class GuardGroupServiceImpl extends ServiceImpl<GuardGroupMapper, GuardGr
         }
         guardGroupActivityVO.setActivities(groupMemberActivityVOS);
         return guardGroupActivityVO;
+    }
+
+    /**
+     * 删除监护组成员
+     * @param groupId 监护组ID
+     * @param wardId 被监护人ID
+     * @return 删除结果
+     */
+    public String deleteGuardGroupMember(Integer groupId, Integer wardId) {
+        GuardGroup guardGroup = this.getById(groupId);
+        if (guardGroup == null) {
+            return "监护组不存在";
+        }
+        return guardGroupMemberService.deleteMember(groupId, wardId);
     }
 
     /**
@@ -137,26 +162,6 @@ public class GuardGroupServiceImpl extends ServiceImpl<GuardGroupMapper, GuardGr
         } catch (Exception e) {
             return "删除失败";
         }
-        return null;
-    }
-
-    /**
-     * 设置成员昵称
-     * @param groupId 监护组ID
-     * @param accountId 成员ID
-     * @param nickname 昵称
-     * @return 设置结果
-     */
-    public String setMemberNickname(Integer groupId, Integer accountId, String nickname) {
-        GuardGroupMember member = guardGroupMemberService.query()
-                .eq("group_id", groupId)
-                .eq("account_id", accountId)
-                .one();
-        if (member == null) {
-            return "成员不存在";
-        }
-        member.setNickname(nickname);
-        guardGroupMemberService.updateById(member);
         return null;
     }
 
