@@ -15,6 +15,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Null;
 import jakarta.validation.constraints.Pattern;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -42,7 +43,12 @@ public class BloodSugarController {
     @Operation(summary = "添加血糖记录")
     public RestBean<BloodSugar> recordBloodSugar(@RequestBody @Valid BloodSugarCreateVO vo,
                                                  HttpServletRequest request){
-        Integer accountId = (Integer) request.getAttribute(ConstUtils.ATTR_USER_ID);
+        Integer accountId;
+        if (vo.getAccountId() != null) {
+            accountId = vo.getAccountId();
+        } else {
+            accountId = (Integer) request.getAttribute(ConstUtils.ATTR_USER_ID);
+        }
         BloodSugar bloodSugar = bloodSugarService.createBloodSugar(accountId, vo);
         return bloodSugar == null ? RestBean.failure(400, "添加血糖记录失败") : RestBean.success(bloodSugar);
     }
@@ -78,9 +84,12 @@ public class BloodSugarController {
      */
     @GetMapping("/get-by-date")
     @Operation(summary = "按日期获取血糖记录")
-    public RestBean<List<BloodSugar>> getBloodSugarByDate(@RequestParam @Pattern(regexp = "^\\d{4}-\\d{2}-\\d{2}$") String date,
+    public RestBean<List<BloodSugar>> getBloodSugarByDate(@RequestParam(required = false) Integer accountId,
+                                                          @RequestParam @Pattern(regexp = "^\\d{4}-\\d{2}-\\d{2}$") String date,
                                               HttpServletRequest request){
-        Integer accountId = (Integer) request.getAttribute(ConstUtils.ATTR_USER_ID);
+        if (accountId == null) {
+            accountId = (Integer) request.getAttribute(ConstUtils.ATTR_USER_ID);
+        }
         List<BloodSugar> bloodSugarList = bloodSugarService.getBloodSugar(accountId, date);
         return RestBean.success(bloodSugarList);
     }
@@ -93,10 +102,13 @@ public class BloodSugarController {
      */
     @GetMapping("/get-by-date-range")
     @Operation(summary = "按日期范围获取血糖记录")
-    public RestBean<List<BloodSugar>> getBloodSugarByDateRange(@RequestParam @Pattern(regexp = "^\\d{4}-\\d{2}-\\d{2}$") String startDate,
-                                                     @RequestParam @Pattern(regexp = "^\\d{4}-\\d{2}-\\d{2}$") String endDate,
-                                                     HttpServletRequest request){
-        Integer accountId = (Integer) request.getAttribute(ConstUtils.ATTR_USER_ID);
+    public RestBean<List<BloodSugar>> getBloodSugarByDateRange(@RequestParam(required = false) Integer accountId,
+                                                               @RequestParam @Pattern(regexp = "^\\d{4}-\\d{2}-\\d{2}$") String startDate,
+                                                               @RequestParam @Pattern(regexp = "^\\d{4}-\\d{2}-\\d{2}$") String endDate,
+                                                               HttpServletRequest request){
+        if (accountId == null) {
+            accountId = (Integer) request.getAttribute(ConstUtils.ATTR_USER_ID);
+        }
         List<BloodSugar> bloodSugarList = bloodSugarService.getBloodSugar(accountId, startDate, endDate);
         return RestBean.success(bloodSugarList);
     }
@@ -110,7 +122,12 @@ public class BloodSugarController {
     @Operation(summary = "按筛选条件获取血糖记录")
     public RestBean<BloodSugarFilteredVO> getBloodSugarByFilter(@RequestBody @Valid BloodSugarFilterVO vo,
                                                    HttpServletRequest request){
-        Integer accountId = (Integer) request.getAttribute(ConstUtils.ATTR_USER_ID);
+        Integer accountId;
+        if (vo.getAccountId() != null) {
+            accountId = vo.getAccountId();
+        } else {
+            accountId = (Integer) request.getAttribute(ConstUtils.ATTR_USER_ID);
+        }
         List<BloodSugar> bloodSugarList = bloodSugarService.getBloodSugar(accountId, vo);
         BloodSugarFilteredVO filteredVO = new BloodSugarFilteredVO(bloodSugarList);
         return RestBean.success(filteredVO);

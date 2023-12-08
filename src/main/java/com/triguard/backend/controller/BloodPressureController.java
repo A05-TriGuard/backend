@@ -39,7 +39,12 @@ public class BloodPressureController {
     @Operation(summary = "添加血压记录")
     public RestBean<BloodPressure> recordBloodPressure(@RequestBody @Valid BloodPressureCreateVO vo,
                                               HttpServletRequest request){
-        Integer accountId = (Integer) request.getAttribute(ConstUtils.ATTR_USER_ID);
+        Integer accountId;
+        if (vo.getAccountId() != null){
+            accountId = vo.getAccountId();
+        } else {
+            accountId = (Integer) request.getAttribute(ConstUtils.ATTR_USER_ID);
+        }
         BloodPressure bloodPressure = bloodPressureService.createBloodPressure(accountId, vo);
         return bloodPressure == null ? RestBean.failure(400, "添加血压记录失败") : RestBean.success(bloodPressure);
     }
@@ -75,9 +80,12 @@ public class BloodPressureController {
      */
     @GetMapping("/get-by-date")
     @Operation(summary = "按日期获取血压记录")
-    public RestBean<List<BloodPressure>> getBloodPressure(@RequestParam @Pattern(regexp = "^\\d{4}-\\d{2}-\\d{2}$") String date,
+    public RestBean<List<BloodPressure>> getBloodPressure(@RequestParam(required = false) Integer accountId,
+                                                          @RequestParam @Pattern(regexp = "^\\d{4}-\\d{2}-\\d{2}$") String date,
                                            HttpServletRequest request){
-        Integer accountId = (Integer) request.getAttribute(ConstUtils.ATTR_USER_ID);
+        if (accountId == null){
+            accountId = (Integer) request.getAttribute(ConstUtils.ATTR_USER_ID);
+        }
         List<BloodPressure> bloodPressureList = bloodPressureService.getBloodPressure(accountId, date);
         return RestBean.success(bloodPressureList);
     }
@@ -90,10 +98,13 @@ public class BloodPressureController {
      */
     @GetMapping("/get-by-date-range")
     @Operation(summary = "按日期范围获取血压记录")
-    public RestBean<List<BloodPressure>> getBloodPressure(@RequestParam @Pattern(regexp = "^\\d{4}-\\d{2}-\\d{2}$") String startDate,
-                                           @RequestParam @Pattern(regexp = "^\\d{4}-\\d{2}-\\d{2}$") String endDate,
-                                           HttpServletRequest request){
-        Integer accountId = (Integer) request.getAttribute(ConstUtils.ATTR_USER_ID);
+    public RestBean<List<BloodPressure>> getBloodPressure(@RequestParam(required = false) Integer accountId,
+                                                          @RequestParam @Pattern(regexp = "^\\d{4}-\\d{2}-\\d{2}$") String startDate,
+                                                          @RequestParam @Pattern(regexp = "^\\d{4}-\\d{2}-\\d{2}$") String endDate,
+                                                          HttpServletRequest request){
+        if (accountId == null){
+            accountId = (Integer) request.getAttribute(ConstUtils.ATTR_USER_ID);
+        }
         List<BloodPressure> bloodPressureList = bloodPressureService.getBloodPressure(accountId, startDate, endDate);
         return RestBean.success(bloodPressureList);
     }
@@ -106,8 +117,13 @@ public class BloodPressureController {
     @PostMapping("/get-by-filter")
     @Operation(summary = "按条件筛选血压记录")
     public RestBean<BloodPressureFilteredVO> getBloodPressure(@RequestBody @Valid BloodPressureFilterVO vo,
-                                           HttpServletRequest request){
-        Integer accountId = (Integer) request.getAttribute(ConstUtils.ATTR_USER_ID);
+                                                              HttpServletRequest request){
+        Integer accountId;
+        if (vo.getAccountId() != null){
+            accountId = vo.getAccountId();
+        } else {
+            accountId = (Integer) request.getAttribute(ConstUtils.ATTR_USER_ID);
+        }
         List<BloodPressure> bloodPressureList = bloodPressureService.getBloodPressure(accountId, vo);
         BloodPressureFilteredVO bloodPressureFilteredVO = new BloodPressureFilteredVO(bloodPressureList);
         return RestBean.success(bloodPressureFilteredVO);

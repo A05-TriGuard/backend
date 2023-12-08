@@ -9,6 +9,7 @@ import lombok.Data;
 
 @Data
 public class BloodLipidsCreateVO implements BaseData {
+    Integer accountId;
     @Digits(integer = 3, fraction = 1)
     Float tc;
     @Digits(integer = 3, fraction = 1)

@@ -8,6 +8,7 @@ import lombok.Data;
  */
 @Data
 public class BloodPressureCreateVO {
+    Integer accountId;
     @Digits(integer = 3, fraction = 0)
     Integer sbp;
     @Digits(integer = 3, fraction = 0)

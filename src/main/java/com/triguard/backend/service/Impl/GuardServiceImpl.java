@@ -153,7 +153,7 @@ public class GuardServiceImpl extends ServiceImpl<GuardianMapper, Guard> impleme
         }
         WardActivityVO wardActivityVO = new WardActivityVO();
         Account wardAccount = accountService.getById(wardId);
-        wardActivityVO.setWardInfo(new WardActivityVO.WardInfo(wardAccount.getEmail(), wardAccount.getUsername(), guard.getWardNickname()));
+        wardActivityVO.setWardInfo(new WardActivityVO.WardInfo(wardAccount.getId(), wardAccount.getEmail(), wardAccount.getUsername(), guard.getWardNickname(), null));
         Date today = new Date();
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
         String todayString = simpleDateFormat.format(today);

@@ -1,5 +1,6 @@
 package com.triguard.backend.entity.vo.response.Guard;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import java.util.List;
@@ -10,15 +11,12 @@ public class WardActivityVO {
     List<WardActivityInfoVO> activities;
 
     @Data
+    @AllArgsConstructor
     public static class WardInfo {
+        Integer id;
         String email;
         String username;
         String nickname;
-
-        public WardInfo(String email, String username, String nickname) {
-            this.email = email;
-            this.username = username;
-            this.nickname = nickname;
-        }
+        String image;
     }
 }

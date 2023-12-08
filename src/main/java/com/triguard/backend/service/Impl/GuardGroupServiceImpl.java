@@ -93,7 +93,7 @@ public class GuardGroupServiceImpl extends ServiceImpl<GuardGroupMapper, GuardGr
                 .filter(member -> member.getRole().equals("ward"))
                 .map(member -> {
                     Account ward = accountService.getById(member.getAccountId());
-                    return new WardActivityVO.WardInfo(ward.getEmail(), ward.getUsername(), member.getNickname());
+                    return new WardActivityVO.WardInfo(ward.getId(), ward.getEmail(), ward.getUsername(), member.getNickname(), null);
                 })
                 .toList();
         guardGroupActivityVO.setWardInfos(wardInfoList);

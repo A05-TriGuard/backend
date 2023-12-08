@@ -13,6 +13,7 @@ import org.hibernate.validator.constraints.Length;
  */
 @Data
 public class BloodPressureFilterVO {
+    Integer accountId;
     @Pattern(regexp = "^\\d{4}-\\d{2}-\\d{2}$")
     String startDate;
     @Pattern(regexp = "^\\d{4}-\\d{2}-\\d{2}$")

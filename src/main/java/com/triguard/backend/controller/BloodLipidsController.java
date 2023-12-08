@@ -36,7 +36,12 @@ public class BloodLipidsController {
     @Operation(summary = "添加血脂记录")
     public RestBean<BloodLipids> recordBloodLipids(@RequestBody @Valid BloodLipidsCreateVO vo,
                                                    HttpServletRequest request){
-        Integer accountId = (Integer) request.getAttribute(ConstUtils.ATTR_USER_ID);
+        Integer accountId;
+        if (vo.getAccountId() != null){
+            accountId = vo.getAccountId();
+        } else {
+            accountId = (Integer) request.getAttribute(ConstUtils.ATTR_USER_ID);
+        }
         BloodLipids bloodLipids = bloodLipidsService.createBloodLipids(accountId, vo);
         return bloodLipids == null ? RestBean.failure(400, "添加血脂记录失败") : RestBean.success(bloodLipids);
     }
@@ -72,9 +77,12 @@ public class BloodLipidsController {
      */
     @GetMapping("/get-by-date")
     @Operation(summary = "获取血脂记录")
-    public RestBean<List<BloodLipids>> getBloodLipidsByDate(@RequestParam String date,
+    public RestBean<List<BloodLipids>> getBloodLipidsByDate(@RequestParam(required = false) Integer accountId,
+                                                            @RequestParam String date,
                                                             HttpServletRequest request){
-        Integer accountId = (Integer) request.getAttribute(ConstUtils.ATTR_USER_ID);
+        if (accountId == null){
+            accountId = (Integer) request.getAttribute(ConstUtils.ATTR_USER_ID);
+        }
         List<BloodLipids> bloodLipids = bloodLipidsService.getBloodLipids(accountId, date);
         return RestBean.success(bloodLipids);
     }
@@ -87,10 +95,13 @@ public class BloodLipidsController {
      */
     @GetMapping("/get-by-date-range")
     @Operation(summary = "获取血脂记录")
-    public RestBean<List<BloodLipids>> getBloodLipidsByDateRange(@RequestParam String startDate,
+    public RestBean<List<BloodLipids>> getBloodLipidsByDateRange(@RequestParam(required = false) Integer accountId,
+                                                                 @RequestParam String startDate,
                                                                  @RequestParam String endDate,
                                                                  HttpServletRequest request){
-        Integer accountId = (Integer) request.getAttribute(ConstUtils.ATTR_USER_ID);
+        if (accountId == null){
+            accountId = (Integer) request.getAttribute(ConstUtils.ATTR_USER_ID);
+        }
         List<BloodLipids> bloodLipids = bloodLipidsService.getBloodLipids(accountId, startDate, endDate);
         return RestBean.success(bloodLipids);
     }
@@ -104,7 +115,12 @@ public class BloodLipidsController {
     @Operation(summary = "根据筛选条件获取血脂记录及统计数据")
     public RestBean<BloodLipidsFilteredVO> getBloodLipidsByFilter(@RequestBody @Valid BloodLipidsFilterVO vo,
                                                                   HttpServletRequest request){
-        Integer accountId = (Integer) request.getAttribute(ConstUtils.ATTR_USER_ID);
+        Integer accountId;
+        if (vo.getAccountId() != null){
+            accountId = vo.getAccountId();
+        } else {
+            accountId = (Integer) request.getAttribute(ConstUtils.ATTR_USER_ID);
+        }
         List<BloodLipids> bloodLipids = bloodLipidsService.getBloodLipids(accountId, vo);
         BloodLipidsFilteredVO bloodLipidsFilteredVO = new BloodLipidsFilteredVO(bloodLipids);
         return RestBean.success(bloodLipidsFilteredVO);

@@ -11,6 +11,7 @@ import lombok.Data;
  */
 @Data
 public class BloodSugarCreateVO {
+    Integer accountId;
     @Digits(integer = 2, fraction = 1)
     Float bs;
     @Min(0)@Max(2)
