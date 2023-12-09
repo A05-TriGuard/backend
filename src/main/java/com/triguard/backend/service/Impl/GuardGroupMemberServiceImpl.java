@@ -1,7 +1,6 @@
 package com.triguard.backend.service.Impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.triguard.backend.entity.dto.Account;
 import com.triguard.backend.entity.dto.Guard;
 import com.triguard.backend.entity.dto.GuardGroupMember;
 import com.triguard.backend.mapper.GuardGroupMemberMapper;
@@ -22,9 +21,6 @@ public class GuardGroupMemberServiceImpl extends ServiceImpl<GuardGroupMemberMap
 
     @Resource
     GuardService guardService;
-
-    @Resource
-    AccountService accountService;
 
     /**
      * 获取监护组ID列表
@@ -73,30 +69,32 @@ public class GuardGroupMemberServiceImpl extends ServiceImpl<GuardGroupMemberMap
     /**
      * 添加监护组成员
      * @param groupId 监护组ID
-     * @param wardId 被监护人ID
+     * @param wardIdList 被监护人ID
      * @return 添加结果
      */
-    public String addMember(Integer groupId, Integer guardianId, Integer wardId) {
-        return addWardMember(groupId, guardianId, wardId);
-    }
-
-    private String addWardMember(Integer groupId, Integer guardianId, Integer wardId) {
+    public String addWardMemberList(Integer groupId, Integer guardianId, List<Integer> wardIdList) {
         try {
-            GuardGroupMember wardMember = new GuardGroupMember();
-            wardMember.setGroupId(groupId);
-            wardMember.setAccountId(wardId);
-            wardMember.setRole("ward");
-            wardMember.setCreatedAt(new Date());
-            Guard guard = guardService.query()
-                    .eq("ward_id", wardId)
-                    .eq("guardian_id", guardianId)
-                    .one();
-            wardMember.setNickname(guard.getWardNickname());
-            this.save(wardMember);
+            for (Integer wardId : wardIdList) {
+                addWardMember(groupId, guardianId, wardId);
+            }
         } catch (Exception e) {
             return "添加失败";
         }
         return null;
+    }
+
+    private void addWardMember(Integer groupId, Integer guardianId, Integer wardId) {
+        GuardGroupMember wardMember = new GuardGroupMember();
+        wardMember.setGroupId(groupId);
+        wardMember.setAccountId(wardId);
+        wardMember.setRole("ward");
+        wardMember.setCreatedAt(new Date());
+        Guard guard = guardService.query()
+                .eq("ward_id", wardId)
+                .eq("guardian_id", guardianId)
+                .one();
+        wardMember.setNickname(guard.getWardNickname());
+        this.save(wardMember);
     }
 
     /**
@@ -118,11 +116,12 @@ public class GuardGroupMemberServiceImpl extends ServiceImpl<GuardGroupMemberMap
      */
     public String deleteMember(Integer groupId, Integer wardId) {
         try {
-            this.query()
+            GuardGroupMember member = this.query()
                     .eq("group_id", groupId)
                     .eq("account_id", wardId)
+                    .eq("role", "ward")
                     .one();
-            this.removeById(groupId);
+            this.removeById(member.getId());
         } catch (Exception e) {
             return "删除失败";
         }

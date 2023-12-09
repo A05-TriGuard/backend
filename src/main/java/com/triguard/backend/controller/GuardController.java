@@ -6,6 +6,7 @@ import com.triguard.backend.entity.dto.Guard;
 import com.triguard.backend.entity.dto.GuardGroup;
 import com.triguard.backend.entity.vo.response.Guard.*;
 import com.triguard.backend.service.AccountService;
+import com.triguard.backend.service.GuardGroupMemberService;
 import com.triguard.backend.service.GuardGroupService;
 import com.triguard.backend.service.GuardService;
 import com.triguard.backend.utils.ConstUtils;
@@ -37,6 +38,9 @@ public class GuardController {
 
     @Resource
     GuardGroupService guardGroupService;
+
+    @Resource
+    GuardGroupMemberService guardGroupMemberService;
 
     /**
      * 获取监护人列表
@@ -218,6 +222,14 @@ public class GuardController {
         if (message != null) {
             return RestBean.failure(400, message);
         }
+        List<Integer> groupIdList = guardGroupMemberService.getGroupIdList(guardianId);
+        try {
+            for (Integer groupId : groupIdList) {
+                guardGroupMemberService.deleteMember(groupId, wardId);
+            }
+        } catch (Exception e) {
+            return RestBean.failure(400, "删除失败");
+        }
         return RestBean.success();
     }
 
@@ -279,16 +291,19 @@ public class GuardController {
     /**
      * 添加监护组成员
      * @param groupId 监护组ID
-     * @param wardId 被监护人ID
+     * @param wardIds 被监护人ID列表
      * @return 添加结果
      */
     @PostMapping("/guard-group/member/add")
     @Operation(summary = "添加监护组成员")
     public RestBean<String> addGuardGroupMember(@RequestParam Integer groupId,
-                                                @RequestParam Integer wardId,
+                                                @RequestParam String wardIds,
                                                 HttpServletRequest request) {
         Integer guardianId = (Integer) request.getAttribute(ConstUtils.ATTR_USER_ID);
-        String message = guardGroupService.addGuardGroupMember(groupId, guardianId, wardId);
+        List<Integer> wardIdList = Stream.of(wardIds.split(","))
+                .map(Integer::parseInt)
+                .toList();
+        String message = guardGroupService.addGuardGroupMember(groupId, guardianId, wardIdList);
         if (message != null) {
             return RestBean.failure(400, message);
         }

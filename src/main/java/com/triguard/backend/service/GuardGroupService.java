@@ -12,7 +12,7 @@ public interface GuardGroupService extends IService<GuardGroup> {
 
     String createGuardGroup(Integer guardianId, String groupName, List<Integer> wardIdList);
 
-    String addGuardGroupMember(Integer groupId, Integer guardianId, Integer wardId);
+    String addGuardGroupMember(Integer groupId, Integer guardianId, List<Integer> wardIdList);
 
     GuardGroupActivityVO getGuardGroupActivity(Integer groupId, Integer guardianId);
 

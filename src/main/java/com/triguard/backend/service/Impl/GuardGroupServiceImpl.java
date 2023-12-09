@@ -66,6 +66,7 @@ public class GuardGroupServiceImpl extends ServiceImpl<GuardGroupMapper, GuardGr
     public String createGuardGroup(Integer guardianId, String groupName, List<Integer> wardIdList) {
         GuardGroup guardGroup = new GuardGroup();
         guardGroup.setName(groupName);
+        guardGroup.setCreatedBy(guardianId);
         this.save(guardGroup);
         return guardGroupMemberService.addMemberList(guardGroup.getId(), guardianId , wardIdList);
     }
@@ -73,15 +74,15 @@ public class GuardGroupServiceImpl extends ServiceImpl<GuardGroupMapper, GuardGr
     /**
      * 添加监护组成员
      * @param groupId 监护组ID
-     * @param wardId 被监护人ID
+     * @param wardIdList 被监护人ID
      * @return 添加结果
      */
-    public String addGuardGroupMember(Integer groupId, Integer guardianId, Integer wardId) {
+    public String addGuardGroupMember(Integer groupId, Integer guardianId, List<Integer> wardIdList) {
         GuardGroup guardGroup = this.getById(groupId);
         if (guardGroup == null) {
             return "监护组不存在";
         }
-        return guardGroupMemberService.addMember(groupId, guardianId, wardId);
+        return guardGroupMemberService.addWardMemberList(groupId, guardianId, wardIdList);
     }
 
     /**
@@ -100,6 +101,9 @@ public class GuardGroupServiceImpl extends ServiceImpl<GuardGroupMapper, GuardGr
                             .eq("guardian_id", guardianId)
                             .eq("ward_id", ward.getId())
                             .one();
+                    if (guard == null) {
+                        return null;
+                    }
                     return new WardActivityVO.WardInfo(ward.getId(), ward.getEmail(), ward.getUsername(), guard.getWardNickname(), null);
                 })
                 .toList();
@@ -116,6 +120,9 @@ public class GuardGroupServiceImpl extends ServiceImpl<GuardGroupMapper, GuardGr
                     .eq("guardian_id", guardianId)
                     .eq("ward_id", member.getAccountId())
                     .one();
+            if (guard == null) {
+                continue;
+            }
             List<BloodPressure> bloodPressureList = bloodPressureService.getBloodPressure(member.getAccountId(), todayString);
             List<BloodSugar> bloodSugarList = bloodSugarService.getBloodSugar(member.getAccountId(), todayString);
             List<BloodLipids> bloodLipidsList = bloodLipidsService.getBloodLipids(member.getAccountId(), todayString);

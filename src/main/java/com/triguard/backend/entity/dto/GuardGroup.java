@@ -15,7 +15,7 @@ public class GuardGroup {
     @TableId(type = IdType.AUTO)
     Integer id;
     String name;
-    String createdBy;
+    Integer createdBy;
     Date createdAt;
 
     public GuardGroup() {
