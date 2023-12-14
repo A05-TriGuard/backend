@@ -283,7 +283,11 @@ public class MomentServiceImpl extends ServiceImpl<MomentMapper, Moment> impleme
      * 创建动态
      *
      * @param accountId 用户id
-     * @param momentCreateVO  动态创建表单
+     * @param content   动态内容
+     * @param classification 三高分类
+     * @param category 话题分类
+     * @param images 图片
+     * @param video 视频
      * @return 是否创建成功
      */
     public Moment createMoment(Integer accountId, String content, String classification, String category, List<MultipartFile> images, MultipartFile video) {
