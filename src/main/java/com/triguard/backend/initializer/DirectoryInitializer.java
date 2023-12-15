@@ -14,16 +14,11 @@ public class DirectoryInitializer implements CommandLineRunner {
     public void run(String... args) {
         File staticDir = new File("static");
         if (!staticDir.exists()) {
-            boolean created = staticDir.mkdir();
-            System.out.println(staticDir.getAbsolutePath());
-            if (created) {
-                log.info("静态文件目录创建成功");
+            if (staticDir.mkdir()) {
+                log.info("Create static directory successfully.");
             } else {
-                log.error("静态文件目录创建失败");
+                log.error("Create static directory failed.");
             }
-        } else {
-            System.out.println(staticDir.getAbsolutePath());
-            log.info("静态文件目录已存在");
         }
     }
 }

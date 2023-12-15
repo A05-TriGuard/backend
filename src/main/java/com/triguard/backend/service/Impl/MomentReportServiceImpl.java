@@ -24,7 +24,7 @@ public class MomentReportServiceImpl extends ServiceImpl<MomentReportMapper, Mom
         momentReport.setAccountId(accountId);
         momentReport.setMomentId(momentId);
         momentReport.setReason(reason);
-        momentReport.setCreateTime(new Date());
+        momentReport.setCreatedAt(new Date());
         return this.save(momentReport);
     }
 

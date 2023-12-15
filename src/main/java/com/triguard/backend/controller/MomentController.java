@@ -2,7 +2,8 @@ package com.triguard.backend.controller;
 
 import com.triguard.backend.entity.RestBean;
 import com.triguard.backend.entity.dto.Moment;
-import com.triguard.backend.entity.vo.request.Moment.MomentCreateVO;
+import com.triguard.backend.entity.dto.MomentComment;
+import com.triguard.backend.entity.vo.response.Moment.MomentCommentCreateVO;
 import com.triguard.backend.entity.vo.response.Moment.MomentInfoVO;
 import com.triguard.backend.service.MomentService;
 import com.triguard.backend.utils.ConstUtils;
@@ -42,7 +43,7 @@ public class MomentController {
      */
     @GetMapping("/list")
     @Operation(summary = "根据三高分类、话题分类、排序方式获取动态列表")
-    public List<MomentInfoVO> getMomentList(@RequestParam(name = "class") String classification,
+    public RestBean<List<MomentInfoVO>> getMomentList(@RequestParam(name = "class") String classification,
                                             @RequestParam String category,
                                             @RequestParam String filter,
                                             @RequestParam(defaultValue = "1") Integer page,
@@ -62,7 +63,7 @@ public class MomentController {
                     momentService.getMomentListByFollow(accountId, classification, category, page, size, keyword);
             default -> momentService.getMomentListByTime(classification, category, page, size, keyword);
         };
-        return momentList.stream().map(moment -> {
+        List<MomentInfoVO> momentInfoVOS = momentList.stream().map(moment -> {
             MomentInfoVO momentInfoVO = new MomentInfoVO();
             BeanUtils.copyProperties(moment, momentInfoVO);
             momentInfoVO.setIsLike(momentService.isLike(accountId, moment.getId()));
@@ -70,6 +71,7 @@ public class MomentController {
             momentInfoVO.setIsFollow(momentService.isFollow(accountId, moment.getAccountId()));
             return momentInfoVO;
         }).toList();
+        return RestBean.success(momentInfoVOS);
     }
 
     /**
@@ -193,4 +195,48 @@ public class MomentController {
         return RestBean.success(momentService.createMoment(accountId, content, classification, category, images, video));
     }
 
+    /**
+     * 删除动态
+     *
+     * @param momentId 动态id
+     * @return 动态id
+     */
+    @GetMapping("/delete")
+    @Operation(summary = "删除动态")
+    public RestBean<String> deleteMoment(@RequestParam Integer momentId,
+                                         HttpServletRequest request) {
+        Integer accountId = (Integer) request.getAttribute(ConstUtils.ATTR_USER_ID);
+        return momentService.deleteMoment(accountId, momentId) ? RestBean.success() : RestBean.failure(400, "删除失败");
+    }
+
+    /**
+     * 发布评论
+     * @param momentId 动态id
+     * @param content 评论内容
+     * @return 评论id
+     */
+    @PostMapping("/comment")
+    @Operation(summary = "发布评论")
+    public RestBean<MomentCommentCreateVO> commentMoment(@RequestParam Integer momentId,
+                                                         @RequestParam String content,
+                                                         @RequestParam(required = false) Integer quoteCommentId,
+                                                         HttpServletRequest request) {
+        Integer accountId = (Integer) request.getAttribute(ConstUtils.ATTR_USER_ID);
+        MomentComment momentComment = momentService.commentMoment(accountId, momentId, content, quoteCommentId);
+        MomentCommentCreateVO momentCommentCreateVO = momentService.getCommentInfo(momentComment);
+        return RestBean.success(momentCommentCreateVO);
+    }
+
+    /**
+     * 获取评论列表
+     * @param momentId 动态id
+     * @return 评论信息
+     */
+    @GetMapping("/comment/list")
+    @Operation(summary = "获取评论列表")
+    public RestBean<List<MomentCommentCreateVO>> getCommentList(@RequestParam Integer momentId) {
+        List<MomentComment> momentCommentList = momentService.getCommentList(momentId);
+        List<MomentCommentCreateVO> momentCommentCreateVOList = momentCommentList.stream().map(momentComment -> momentService.getCommentInfo(momentComment)).toList();
+        return RestBean.success(momentCommentCreateVOList);
+    }
 }

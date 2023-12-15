@@ -2,7 +2,8 @@ package com.triguard.backend.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.triguard.backend.entity.dto.Moment;
-import com.triguard.backend.entity.vo.request.Moment.MomentCreateVO;
+import com.triguard.backend.entity.dto.MomentComment;
+import com.triguard.backend.entity.vo.response.Moment.MomentCommentCreateVO;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -41,4 +42,14 @@ public interface MomentService extends IService<Moment> {
     Boolean reportMoment(Integer accountId, Integer momentId, String reason);
 
     Moment createMoment(Integer accountId, String content, String classification, String category, List<MultipartFile> images, MultipartFile video);
+
+    boolean deleteMoment(Integer accountId, Integer momentId);
+
+    MomentComment commentMoment(Integer accountId, Integer momentId, String content, Integer quoteCommentId);
+
+    MomentComment getCommentById(Integer commentId);
+
+    MomentCommentCreateVO getCommentInfo(MomentComment momentComment);
+
+    List<MomentComment> getCommentList(Integer momentId);
 }

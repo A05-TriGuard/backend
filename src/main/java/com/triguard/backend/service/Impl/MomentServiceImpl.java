@@ -5,11 +5,11 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.triguard.backend.entity.dto.Account;
 import com.triguard.backend.entity.dto.Moment;
-import com.triguard.backend.entity.vo.request.Moment.MomentCreateVO;
+import com.triguard.backend.entity.dto.MomentComment;
+import com.triguard.backend.entity.vo.response.Moment.MomentCommentCreateVO;
 import com.triguard.backend.mapper.MomentMapper;
 import com.triguard.backend.service.*;
 import jakarta.annotation.Resource;
-import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -38,6 +38,9 @@ public class MomentServiceImpl extends ServiceImpl<MomentMapper, Moment> impleme
     @Resource
     AccountService accountService;
 
+    @Resource
+    MomentCommentService momentCommentService;
+
     /**
      * 根据三高分类、话题分类、时间排序获取动态列表
      *
@@ -52,7 +55,7 @@ public class MomentServiceImpl extends ServiceImpl<MomentMapper, Moment> impleme
         Page<Moment> momentPage = new Page<>(page, size);
         QueryChainWrapper<Moment> queryWrapper = this.getBaseQueryWrapper(classification, category, keyword);
         queryWrapper = queryWrapper.orderByDesc("created_at");
-        return this.page(momentPage, queryWrapper).getRecords();
+        return queryWrapper.page(momentPage).getRecords();
     }
 
     /**
@@ -69,7 +72,7 @@ public class MomentServiceImpl extends ServiceImpl<MomentMapper, Moment> impleme
         Page<Moment> momentPage = new Page<>(page, size);
         QueryChainWrapper<Moment> queryWrapper = this.getBaseQueryWrapper(classification, category, keyword);
         queryWrapper = queryWrapper.orderByDesc("comment_count").orderByDesc("like_count").orderByDesc("created_at");
-        return this.page(momentPage, queryWrapper).getRecords();
+        return queryWrapper.page(momentPage).getRecords();
     }
 
     /**
@@ -87,7 +90,7 @@ public class MomentServiceImpl extends ServiceImpl<MomentMapper, Moment> impleme
         Page<Moment> momentPage = new Page<>(page, size);
         QueryChainWrapper<Moment> queryWrapper = this.getBaseQueryWrapper(classification, category, keyword);
         queryWrapper = queryWrapper.eq("account_id", accountId).orderByDesc("created_at");
-        return this.page(momentPage, queryWrapper).getRecords();
+        return queryWrapper.page(momentPage).getRecords();
     }
 
     /**
@@ -106,7 +109,7 @@ public class MomentServiceImpl extends ServiceImpl<MomentMapper, Moment> impleme
         QueryChainWrapper<Moment> queryWrapper = this.getBaseQueryWrapper(classification, category, keyword);
         queryWrapper = queryWrapper.inSql("id", "select moment_id from db_moment_like where account_id = " + accountId)
                 .orderByDesc("created_at");
-        return this.page(momentPage, queryWrapper).getRecords();
+        return queryWrapper.page(momentPage).getRecords();
     }
 
     /**
@@ -125,7 +128,7 @@ public class MomentServiceImpl extends ServiceImpl<MomentMapper, Moment> impleme
         QueryChainWrapper<Moment> queryWrapper = this.getBaseQueryWrapper(classification, category, keyword);
         queryWrapper = queryWrapper.inSql("id", "select moment_id from db_moment_favorite where account_id = " + accountId)
                 .orderByDesc("created_at");
-        return this.page(momentPage, queryWrapper).getRecords();
+        return queryWrapper.page(momentPage).getRecords();
     }
 
     /**
@@ -144,7 +147,7 @@ public class MomentServiceImpl extends ServiceImpl<MomentMapper, Moment> impleme
         QueryChainWrapper<Moment> queryWrapper = this.getBaseQueryWrapper(classification, category, keyword);
         queryWrapper = queryWrapper.inSql("account_id", "select follow_id from db_follow where account_id = " + accountId)
                 .orderByDesc("created_at");
-        return this.page(momentPage, queryWrapper).getRecords();
+        return queryWrapper.page(momentPage).getRecords();
     }
 
     private QueryChainWrapper<Moment> getBaseQueryWrapper(String classification, String category, String keyword) {
@@ -209,7 +212,15 @@ public class MomentServiceImpl extends ServiceImpl<MomentMapper, Moment> impleme
      * @return 是否点赞成功
      */
     public Boolean likeMoment(Integer accountId, Integer momentId) {
-        return momentLikeService.saveMomentLike(accountId, momentId);
+        Boolean result = momentLikeService.saveMomentLike(accountId, momentId);
+        if (result) {
+            Moment moment = this.getById(momentId);
+            moment.setLikeCount(moment.getLikeCount() + 1);
+            this.updateById(moment);
+            return true;
+        } else {
+            return false;
+        }
     }
 
     /**
@@ -220,7 +231,15 @@ public class MomentServiceImpl extends ServiceImpl<MomentMapper, Moment> impleme
      * @return 是否取消点赞成功
      */
     public Boolean unlikeMoment(Integer accountId, Integer momentId) {
-        return momentLikeService.removeMomentLike(accountId, momentId);
+        Boolean result = momentLikeService.removeMomentLike(accountId, momentId);
+        if (result) {
+            Moment moment = this.getById(momentId);
+            moment.setLikeCount(moment.getLikeCount() - 1);
+            this.updateById(moment);
+            return true;
+        } else {
+            return false;
+        }
     }
 
     /**
@@ -231,7 +250,15 @@ public class MomentServiceImpl extends ServiceImpl<MomentMapper, Moment> impleme
      * @return 是否收藏成功
      */
     public Boolean favoriteMoment(Integer accountId, Integer momentId) {
-        return momentFavoriteService.saveMomentFavorite(accountId, momentId);
+        Boolean result = momentFavoriteService.saveMomentFavorite(accountId, momentId);
+        if (result) {
+            Moment moment = this.getById(momentId);
+            moment.setFavoriteCount(moment.getFavoriteCount() + 1);
+            this.updateById(moment);
+            return true;
+        } else {
+            return false;
+        }
     }
 
     /**
@@ -242,7 +269,15 @@ public class MomentServiceImpl extends ServiceImpl<MomentMapper, Moment> impleme
      * @return 是否取消收藏成功
      */
     public Boolean unfavoriteMoment(Integer accountId, Integer momentId) {
-        return momentFavoriteService.removeMomentFavorite(accountId, momentId);
+        Boolean result = momentFavoriteService.removeMomentFavorite(accountId, momentId);
+        if (result) {
+            Moment moment = this.getById(momentId);
+            moment.setFavoriteCount(moment.getFavoriteCount() - 1);
+            this.updateById(moment);
+            return true;
+        } else {
+            return false;
+        }
     }
 
     /**
@@ -321,6 +356,105 @@ public class MomentServiceImpl extends ServiceImpl<MomentMapper, Moment> impleme
         }
         this.save(moment);
         return moment;
+    }
+
+    /**
+     * 删除动态
+     *
+     * @param accountId 用户id
+     * @param momentId  动态id
+     * @return 是否删除成功
+     */
+    public boolean deleteMoment(Integer accountId, Integer momentId) {
+        Moment moment = this.getById(momentId);
+        if (moment == null) {
+            return false;
+        }
+        if (!moment.getAccountId().equals(accountId)) {
+            return false;
+        }
+        return this.removeById(momentId);
+    }
+
+    /**
+     * 发布评论
+     *
+     * @param accountId 用户id
+     * @param momentId  动态id
+     * @param content 评论内容
+     * @return 评论id
+     */
+    public MomentComment commentMoment(Integer accountId, Integer momentId, String content, Integer quoteCommentId) {
+        Moment moment = this.getById(momentId);
+        if (moment == null) {
+            return null;
+        }
+        MomentComment momentComment = new MomentComment();
+        momentComment.setAccountId(accountId);
+        momentComment.setMomentId(momentId);
+        momentComment.setContent(content);
+        momentComment.setQuoteCommentId(quoteCommentId);
+        momentComment.setCreateTime(new Date());
+        boolean result = momentCommentService.save(momentComment);
+        if (result) {
+            moment.setCommentCount(moment.getCommentCount() + 1);
+            this.updateById(moment);
+        }
+        return momentComment;
+    }
+
+    /**
+     * 根据评论id获取评论
+     *
+     * @param commentId 评论id
+     * @return 评论
+     */
+    public MomentComment getCommentById(Integer commentId) {
+        return momentCommentService.getById(commentId);
+    }
+
+    /**
+     * 获取评论信息
+     *
+     * @param momentComment 评论
+     * @return 评论信息
+     */
+    public MomentCommentCreateVO getCommentInfo(MomentComment momentComment) {
+        MomentCommentCreateVO momentCommentCreateVO = new MomentCommentCreateVO();
+        momentCommentCreateVO.setId(momentComment.getId());
+        momentCommentCreateVO.setMomentId(momentComment.getMomentId());
+        Account account = accountService.getById(momentComment.getAccountId());
+        momentCommentCreateVO.setAccountId(account.getId());
+        momentCommentCreateVO.setUsername(account.getUsername());
+        // TODO: 2021/7/21 profile
+        momentCommentCreateVO.setProfile(null);
+        momentCommentCreateVO.setContent(momentComment.getContent());
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        momentCommentCreateVO.setCreateTime(simpleDateFormat.format(momentComment.getCreateTime()));
+        if (momentComment.getQuoteCommentId() != null) {
+            MomentComment quoteComment = this.getCommentById(momentComment.getQuoteCommentId());
+            momentCommentCreateVO.setQuoteCommentId(quoteComment.getId());
+            momentCommentCreateVO.setQuoteCommentAccountId(quoteComment.getAccountId());
+            Account quoteAccount = accountService.getById(quoteComment.getAccountId());
+            momentCommentCreateVO.setQuoteCommentUsername(quoteAccount.getUsername());
+            // TODO: 2021/7/21 profile
+            momentCommentCreateVO.setQuoteCommentProfile(null);
+            momentCommentCreateVO.setQuoteCommentContent(quoteComment.getContent());
+        }
+        return momentCommentCreateVO;
+    }
+
+    /**
+     * 根据动态id获取评论列表
+     *
+     * @param momentId 动态id
+     * @return 评论列表
+     */
+    public List<MomentComment> getCommentList(Integer momentId) {
+        return momentCommentService.query()
+                .eq("moment_id", momentId)
+                .orderByDesc("create_time")
+                .list();
     }
 
 }

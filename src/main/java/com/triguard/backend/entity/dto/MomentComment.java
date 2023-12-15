@@ -11,14 +11,15 @@ import lombok.NoArgsConstructor;
 import java.util.Date;
 
 @Data
-@TableName("db_moment_report")
+@TableName("db_moment_comment")
 @AllArgsConstructor
 @NoArgsConstructor
-public class MomentReport implements BaseData {
+public class MomentComment implements BaseData {
     @TableId(type = IdType.AUTO)
     Integer id;
-    Integer accountId;
     Integer momentId;
-    String reason;
-    Date createdAt;
+    Integer accountId;
+    String content;
+    Integer quoteCommentId;
+    Date createTime;
 }
