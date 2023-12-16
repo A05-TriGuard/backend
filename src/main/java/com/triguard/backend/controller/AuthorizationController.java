@@ -5,6 +5,7 @@ import com.triguard.backend.entity.vo.request.Authorization.EmailConfirmResetVO;
 import com.triguard.backend.entity.vo.request.Authorization.EmailRegisterVO;
 import com.triguard.backend.entity.vo.request.Authorization.EmailResetVO;
 import com.triguard.backend.service.AccountService;
+import com.triguard.backend.utils.ConstUtils;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Resource;
@@ -97,6 +98,12 @@ public class AuthorizationController {
     public RestBean<Void> resetPassword(@RequestBody @Valid EmailResetVO vo){
         return this.messageHandle(() ->
                 accountService.resetEmailAccountPassword(vo));
+    }
+
+    @GetMapping("/account")
+    @Operation(summary = "获取当前登录用户信息")
+    public RestBean<Integer> getAccount(HttpServletRequest request){
+        return RestBean.success((Integer) request.getAttribute(ConstUtils.ATTR_USER_ID));
     }
 
     /**
