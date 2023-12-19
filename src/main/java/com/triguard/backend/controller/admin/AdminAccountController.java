@@ -18,7 +18,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/admin/account")
 @Tag(name = "管理员账户相关接口")
-public class AccountController {
+public class AdminAccountController {
 
     @Resource
     AccountService accountService;

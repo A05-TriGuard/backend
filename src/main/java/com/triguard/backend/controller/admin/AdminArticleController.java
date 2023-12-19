@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/admin/article")
 @Tag(name = "管理员文章相关接口")
-public class ArticleController {
+public class AdminArticleController {
 
     @Resource
     ArticleService articleService;
