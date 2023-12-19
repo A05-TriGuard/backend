@@ -38,8 +38,8 @@ public class ArticleController {
      */
     @GetMapping("/disease/list")
     @Operation(summary = "分页获取疾病预防文章列表")
-    public RestBean<List<SimpleArticleInfoVO>> getDiseaseArticle(@RequestParam Integer page,
-                                                                 @RequestParam Integer size){
+    public RestBean<List<SimpleArticleInfoVO>> getDiseaseArticle(@RequestParam(defaultValue = "1") Integer page,
+                                                                 @RequestParam(defaultValue = "10") Integer size){
         List<Article> articles = articleService.getDiseaseArticle(page, size);
         List<SimpleArticleInfoVO> simpleArticleInfoVOS = articles.stream().map(article -> {
             SimpleArticleInfoVO simpleArticleInfoVO = new SimpleArticleInfoVO();
@@ -57,8 +57,8 @@ public class ArticleController {
      */
     @GetMapping("/science/list")
     @Operation(summary = "分页获取科普文章列表")
-    public RestBean<List<SimpleArticleInfoVO>> getScienceArticle(@RequestParam Integer page,
-                                                                 @RequestParam Integer size){
+    public RestBean<List<SimpleArticleInfoVO>> getScienceArticle(@RequestParam(defaultValue = "1") Integer page,
+                                                                 @RequestParam(defaultValue = "10") Integer size){
         List<Article> articles = articleService.getScienceArticle(page, size);
         List<SimpleArticleInfoVO> simpleArticleInfoVOS = articles.stream().map(article -> {
             SimpleArticleInfoVO simpleArticleInfoVO = new SimpleArticleInfoVO();
@@ -163,18 +163,6 @@ public class ArticleController {
         }).toList());
         simpleArticleInfoVOS.sort((o1, o2) -> o2.getId() - o1.getId());
         return RestBean.success(simpleArticleInfoVOS);
-    }
-
-    // TODO: 管理员操作
-    /**
-     * 添加文章
-     * @param article 文章信息
-     * @return 响应结果
-     */
-    @PostMapping("/create")
-    @Operation(summary = "添加文章")
-    public RestBean<Article> createArticle(@RequestBody Article article){
-        return articleService.save(article) ? RestBean.success(article) : RestBean.failure(400, "添加失败");
     }
 
 }

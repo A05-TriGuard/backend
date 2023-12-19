@@ -41,4 +41,13 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
                 .getRecords();
     }
 
+    /**
+     * 发布文章
+     * @param article
+     * @return Article
+     */
+    public Article createArticle(Article article) {
+        return this.save(article) ? article : null;
+    }
+
 }

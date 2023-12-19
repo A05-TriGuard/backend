@@ -100,12 +100,6 @@ public class AuthorizationController {
                 accountService.resetEmailAccountPassword(vo));
     }
 
-    @GetMapping("/account")
-    @Operation(summary = "获取当前登录用户信息")
-    public RestBean<Integer> getAccount(HttpServletRequest request){
-        return RestBean.success((Integer) request.getAttribute(ConstUtils.ATTR_USER_ID));
-    }
-
     /**
      * 针对于返回值为String作为错误信息的方法进行统一处理
      * @param action 具体操作

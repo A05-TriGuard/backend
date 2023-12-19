@@ -12,4 +12,5 @@ public interface ArticleService extends IService<Article> {
 
     List<Article> getScienceArticle(Integer page, Integer size);
 
+    Article createArticle(Article article);
 }
