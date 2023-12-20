@@ -4,6 +4,7 @@ create table `triguard`.`db_account`  (
     `password` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci null default null,
     `email` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci null default null,
     `phone` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci null default null,
+    `profile` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci null default null,
     `role` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci null default null,
     `create_time` datetime null default null,
     primary key (`id`) using btree

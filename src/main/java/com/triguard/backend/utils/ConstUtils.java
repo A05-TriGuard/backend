@@ -35,4 +35,6 @@ public final class ConstUtils {
     public final static String SEARCH_FOOD_HISTORY = "search:food:history:";
     //食物信息获取历史
     public final static String GET_FOOD_INFO_HISTORY = "get:food:info:history:";
+    // 运动信息
+    public static final String REDIS_KEY_EXERCISE = "exercise:";
 }

@@ -6,23 +6,20 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import com.triguard.backend.entity.BaseData;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
-import java.util.Date;
-
-/**
- * 数据库中的用户信息
- */
 @Data
-@TableName("db_account")
+@TableName("db_exercise")
 @AllArgsConstructor
-public class Account implements BaseData {
+@NoArgsConstructor
+public class Exercise implements BaseData {
     @TableId(type = IdType.AUTO)
     Integer id;
-    String username;
-    String password;
-    String email;
-    String phone;
-    String profile;
-    String role;
-    Date createTime;
+    Integer accountId;
+    Integer type;
+    String startTime;
+    String endTime;
+    Integer duration;
+    Integer feelings;
+    String remark;
 }

@@ -11,4 +11,5 @@ public class AccountInfoVO {
     String username;
     String email;
     String phone;
+    String profile;
 }

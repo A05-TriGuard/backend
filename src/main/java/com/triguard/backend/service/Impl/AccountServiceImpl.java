@@ -9,6 +9,7 @@ import com.triguard.backend.entity.vo.request.Authorization.EmailRegisterVO;
 import com.triguard.backend.entity.vo.request.Authorization.EmailResetVO;
 import com.triguard.backend.mapper.AccountMapper;
 import com.triguard.backend.service.AccountService;
+import com.triguard.backend.service.FileService;
 import com.triguard.backend.utils.ConstUtils;
 import com.triguard.backend.utils.FlowUtils;
 import jakarta.annotation.Resource;
@@ -20,6 +21,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Date;
 import java.util.Map;
@@ -47,6 +49,9 @@ public class AccountServiceImpl extends ServiceImpl<AccountMapper, Account> impl
 
     @Resource
     FlowUtils flow;
+
+    @Resource
+    FileService fileService;
 
     /**
      * 从数据库中通过用户名或邮箱查找用户详细信息
@@ -125,7 +130,7 @@ public class AccountServiceImpl extends ServiceImpl<AccountMapper, Account> impl
         if(this.existsAccountByUsername(username)) return "该用户名已被他人使用，请重新更换";
         String password = passwordEncoder.encode(info.getPassword());
         Account account = new Account(null, info.getUsername(),
-                password, email, null, ConstUtils.ROLE_DEFAULT, new Date());
+                password, email, null, null, ConstUtils.ROLE_DEFAULT, new Date());
         if(!this.save(account)) {
             return "内部错误，注册失败";
         } else {
@@ -233,5 +238,26 @@ public class AccountServiceImpl extends ServiceImpl<AccountMapper, Account> impl
      */
     private boolean existsAccountByPhone(String phone){
         return this.baseMapper.exists(Wrappers.<Account>query().eq("phone", phone));
+    }
+
+    /**
+     * 设置账户头像
+     * @param accountId 账户ID
+     * @param profile 头像文件
+     * @return 是否成功
+     */
+    public String setProfile(Integer accountId, MultipartFile profile) {
+        try {
+            String profileUrl = fileService.uploadMultipartFile(profile);
+            Account account = this.getById(accountId);
+            account.setProfile(profileUrl);
+            if (this.updateById(account)) {
+                return profileUrl;
+            } else {
+                return null;
+            }
+        } catch (Exception e) {
+            return null;
+        }
     }
 }
