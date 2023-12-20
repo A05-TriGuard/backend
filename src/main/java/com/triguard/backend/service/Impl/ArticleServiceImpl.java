@@ -43,7 +43,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
 
     /**
      * 发布文章
-     * @param article
+     * @param article 文章
      * @return Article
      */
     public Article createArticle(Article article) {
