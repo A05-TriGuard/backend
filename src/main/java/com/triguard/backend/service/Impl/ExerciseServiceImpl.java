@@ -71,7 +71,7 @@ public class ExerciseServiceImpl extends ServiceImpl<ExerciseMapper, Exercise> i
         return this.query()
                 .eq("account_id", accountId)
                 .orderByDesc("start_time")
-                .one();
+                .list().get(0);
     }
 
     /**

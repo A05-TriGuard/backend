@@ -4,6 +4,7 @@ import lombok.Data;
 
 @Data
 public class ExerciseInfoVO {
+    Integer id;
     String startTime;
     String endTime;
     Integer duration;
