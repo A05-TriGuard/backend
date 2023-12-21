@@ -59,7 +59,7 @@ public class GuardController {
             Account account = accountService.getById(guard.getGuardianId());
             guardianInfoVO.setUsername(account.getUsername());
             guardianInfoVO.setEmail(account.getEmail());
-            // TODO: set image
+            guardianInfoVO.setImage(account.getProfile());
             return guardianInfoVO;
         }).toList();
         return RestBean.success(guardianInfoVOS);
@@ -145,6 +145,7 @@ public class GuardController {
             Account account = accountService.getById(guard.getWardId());
             wardInfoVO.setUsername(account.getUsername());
             wardInfoVO.setEmail(account.getEmail());
+            wardInfoVO.setImage(account.getProfile());
             return wardInfoVO;
         }).toList();
         WardVO wardVO = new WardVO(guardGroupInfoVOS, wardInfoVOS);

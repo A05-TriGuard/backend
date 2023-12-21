@@ -133,6 +133,9 @@ public class SportsController {
 
     /**
      * 筛选运动记录
+     *
+     * @param vo 筛选条件
+     * @return 筛选结果
      */
     @PostMapping("/exercise/filter")
     @Operation(summary = "筛选运动记录")
@@ -222,6 +225,10 @@ public class SportsController {
 
     /**
      * 继续运动
+     *
+     * @param time      继续时间
+     * @param accountId 用户id
+     * @return 是否成功
      */
     @PostMapping("/exercise/continue")
     @Operation(summary = "继续运动")

@@ -336,8 +336,7 @@ public class MomentServiceImpl extends ServiceImpl<MomentMapper, Moment> impleme
         moment.setAccountId(accountId);
         Account account = accountService.getById(accountId);
         moment.setUsername(account.getUsername());
-        // TODO: Set profile
-        moment.setProfile("");
+        moment.setProfile(account.getProfile());
         if (images != null && !images.isEmpty()) {
             StringBuilder imageUrls = new StringBuilder();
             for (MultipartFile image : images) {
@@ -426,8 +425,7 @@ public class MomentServiceImpl extends ServiceImpl<MomentMapper, Moment> impleme
         Account account = accountService.getById(momentComment.getAccountId());
         momentCommentCreateVO.setAccountId(account.getId());
         momentCommentCreateVO.setUsername(account.getUsername());
-        // TODO: 2021/7/21 profile
-        momentCommentCreateVO.setProfile(null);
+        momentCommentCreateVO.setProfile(account.getProfile());
         momentCommentCreateVO.setContent(momentComment.getContent());
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         momentCommentCreateVO.setCreateTime(simpleDateFormat.format(momentComment.getCreateTime()));
@@ -437,8 +435,7 @@ public class MomentServiceImpl extends ServiceImpl<MomentMapper, Moment> impleme
             momentCommentCreateVO.setQuoteCommentAccountId(quoteComment.getAccountId());
             Account quoteAccount = accountService.getById(quoteComment.getAccountId());
             momentCommentCreateVO.setQuoteCommentUsername(quoteAccount.getUsername());
-            // TODO: 2021/7/21 profile
-            momentCommentCreateVO.setQuoteCommentProfile(null);
+            momentCommentCreateVO.setQuoteCommentProfile(quoteAccount.getProfile());
             momentCommentCreateVO.setQuoteCommentContent(quoteComment.getContent());
         }
         return momentCommentCreateVO;
