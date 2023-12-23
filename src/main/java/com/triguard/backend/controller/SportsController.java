@@ -4,10 +4,7 @@ import com.triguard.backend.entity.RestBean;
 import com.triguard.backend.entity.dto.Exercise;
 import com.triguard.backend.entity.dto.Steps;
 import com.triguard.backend.entity.vo.request.Sports.ExerciseFilterVO;
-import com.triguard.backend.entity.vo.response.Sports.CurrentExerciseVO;
-import com.triguard.backend.entity.vo.response.Sports.ExerciseFilteredVO;
-import com.triguard.backend.entity.vo.response.Sports.ExerciseInfoVO;
-import com.triguard.backend.entity.vo.response.Sports.StepsInfoVO;
+import com.triguard.backend.entity.vo.response.Sports.*;
 import com.triguard.backend.service.ExerciseService;
 import com.triguard.backend.service.StepsService;
 import com.triguard.backend.utils.ConstUtils;
@@ -23,6 +20,11 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -42,6 +44,49 @@ public class SportsController {
 
     @Resource
     StringRedisTemplate stringRedisTemplate;
+
+    /**
+     * 获取今日步数和运动时长
+     *
+     * @param accountId 用户id
+     * @param startDate 开始日期
+     * @param endDate   结束日期
+     * @return 今日步数和运动时长
+     */
+    @GetMapping("/info")
+    @Operation(summary = "获取步数和运动时长")
+    public RestBean<List<SportsInfoVO>> getTodaySportsInfo(@RequestParam(required = false) Integer accountId,
+                                                           @RequestParam String startDate,
+                                                           @RequestParam String endDate,
+                                                           HttpServletRequest request) {
+        if (accountId == null) {
+            accountId = (Integer) request.getAttribute(ConstUtils.ATTR_USER_ID);
+        }
+        List<Steps> steps = stepsService.getStepsByDateRange(accountId, startDate, endDate);
+        List<Exercise> exercises = exerciseService.getExerciseByDateRange(accountId, startDate, endDate);
+        List<SportsInfoVO> sportsInfoVOS = new ArrayList<>();
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        LocalDate start = LocalDate.parse(startDate, dateTimeFormatter);
+        LocalDate end = LocalDate.parse(endDate, dateTimeFormatter);
+        for (LocalDate date = start; !date.isAfter(end); date = date.plusDays(1)) {
+            SportsInfoVO sportsInfoVO = new SportsInfoVO();
+            sportsInfoVO.setDate(date.format(dateTimeFormatter));
+            sportsInfoVO.setSteps(0);
+            sportsInfoVO.setDuration(0);
+            for (Steps step : steps) {
+                if (step.getDate().equals(date.format(dateTimeFormatter))) {
+                    sportsInfoVO.setSteps(sportsInfoVO.getSteps() + step.getSteps());
+                }
+            }
+            for (Exercise exercise : exercises) {
+                if (exercise.getStartTime().split(" ")[0].equals(date.format(dateTimeFormatter))) {
+                    sportsInfoVO.setDuration(sportsInfoVO.getDuration() + exercise.getDuration());
+                }
+            }
+            sportsInfoVOS.add(sportsInfoVO);
+        }
+        return RestBean.success(sportsInfoVOS);
+    }
 
     /**
      * 获取步数
@@ -333,6 +378,71 @@ public class SportsController {
             duration += exercise.getDuration();
         }
         return RestBean.success(duration);
+    }
+
+    /**
+     * 获取运动记录
+     *
+     * @param id 运动记录id
+     * @param accountId 用户id
+     * @return 运动记录
+     */
+    @PostMapping("/exercise/update")
+    @Operation(summary = "修改运动记录")
+    public RestBean<Void> updateExercise(@RequestParam Integer id,
+                                         @RequestParam(required = false) Integer accountId,
+                                         @RequestParam(required = false) Integer type,
+                                         @RequestParam(required = false) Integer feelings,
+                                         @RequestParam(required = false) String remark,
+                                         HttpServletRequest request) {
+        if (accountId == null) {
+            accountId = (Integer) request.getAttribute(ConstUtils.ATTR_USER_ID);
+        }
+        Exercise exercise = exerciseService.getById(id);
+        if (exercise == null || !exercise.getAccountId().equals(accountId)) {
+            return RestBean.failure(400, "运动记录不存在");
+        }
+        if (type != null) {
+            exercise.setType(type);
+        }
+        if (feelings != null) {
+            exercise.setFeelings(feelings);
+        }
+        if (remark != null) {
+            exercise.setRemark(remark);
+        }
+        if (exerciseService.updateById(exercise)) {
+            return RestBean.success();
+        } else {
+            return RestBean.failure(400, "修改失败");
+        }
+    }
+
+    /**
+     * 删除运动记录
+     *
+     * @param id 运动记录id
+     * @param accountId 用户id
+     *
+     * @return 是否成功
+     */
+    @GetMapping("/exercise/delete")
+    @Operation(summary = "删除运动记录")
+    public RestBean<Void> deleteExercise(@RequestParam Integer id,
+                                         @RequestParam(required = false) Integer accountId,
+                                         HttpServletRequest request) {
+        if (accountId == null) {
+            accountId = (Integer) request.getAttribute(ConstUtils.ATTR_USER_ID);
+        }
+        Exercise exercise = exerciseService.getById(id);
+        if (exercise == null || !exercise.getAccountId().equals(accountId)) {
+            return RestBean.failure(400, "运动记录不存在");
+        }
+        if (exerciseService.removeById(id)) {
+            return RestBean.success();
+        } else {
+            return RestBean.failure(400, "删除失败");
+        }
     }
 
 }
