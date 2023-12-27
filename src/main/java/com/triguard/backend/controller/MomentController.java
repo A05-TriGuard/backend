@@ -1,10 +1,12 @@
 package com.triguard.backend.controller;
 
 import com.triguard.backend.entity.RestBean;
+import com.triguard.backend.entity.dto.Account;
 import com.triguard.backend.entity.dto.Moment;
 import com.triguard.backend.entity.dto.MomentComment;
 import com.triguard.backend.entity.vo.response.Moment.MomentCommentCreateVO;
 import com.triguard.backend.entity.vo.response.Moment.MomentInfoVO;
+import com.triguard.backend.service.AccountService;
 import com.triguard.backend.service.MomentService;
 import com.triguard.backend.utils.ConstUtils;
 import io.swagger.v3.oas.annotations.Operation;
@@ -29,6 +31,9 @@ public class MomentController {
 
     @Resource
     MomentService momentService;
+
+    @Resource
+    AccountService accountService;
 
     /**
      * 根据三高分类、话题分类、排序方式获取动态列表
@@ -66,6 +71,9 @@ public class MomentController {
         List<MomentInfoVO> momentInfoVOS = momentList.stream().map(moment -> {
             MomentInfoVO momentInfoVO = new MomentInfoVO();
             BeanUtils.copyProperties(moment, momentInfoVO);
+            Account account = accountService.getById(moment.getAccountId());
+            momentInfoVO.setUsername(account.getUsername());
+            momentInfoVO.setProfile(account.getProfile());
             momentInfoVO.setIsLike(momentService.isLike(accountId, moment.getId()));
             momentInfoVO.setIsFavorite(momentService.isFavorite(accountId, moment.getId()));
             momentInfoVO.setIsFollow(momentService.isFollow(accountId, moment.getAccountId()));
