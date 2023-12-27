@@ -15,6 +15,8 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Date;
+
 @Validated
 @RestController
 @RequestMapping("/api/admin/article")
@@ -45,7 +47,9 @@ public class AdminArticleController {
                                            @RequestParam String title,
                                            @RequestParam(required = false) String subtitle,
                                            @RequestParam String content,
-                                           @RequestPart(required = false) MultipartFile cover) {
+                                           @RequestPart(required = false) MultipartFile cover,
+                                           HttpServletRequest request) {
+        Integer accountId = (Integer) request.getAttribute(ConstUtils.ATTR_USER_ID);
         Article article = new Article();
         article.setType(type);
         article.setTitle(title);
@@ -55,7 +59,12 @@ public class AdminArticleController {
             article.setCover(fileService.uploadMultipartFile(cover));
         }
         Article savedArticle = articleService.createArticle(article);
-        return savedArticle == null ? RestBean.failure(400, "发布失败") : RestBean.success(savedArticle);
+        if (savedArticle == null) {
+            return RestBean.failure(400, "发布失败");
+        } else {
+            stringRedisTemplate.delete("article_draft_" + accountId);
+            return RestBean.success(savedArticle);
+        }
     }
 
     /**
@@ -110,6 +119,8 @@ public class AdminArticleController {
         article.setTitle(title);
         article.setSubtitle(subtitle);
         article.setContent(content);
+        article.setCreatedAt(new Date());
+        article.setUpdatedAt(new Date());
         try {
             ObjectMapper objectMapper = new ObjectMapper();
             String articleDraft = objectMapper.writeValueAsString(article);
