@@ -8,6 +8,7 @@ import com.triguard.backend.entity.vo.response.Guard.WardActivityInfoVO;
 import com.triguard.backend.entity.vo.response.Guard.WardActivityVO;
 import com.triguard.backend.mapper.GuardGroupMapper;
 import com.triguard.backend.service.*;
+import com.triguard.backend.utils.ConstUtils;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 
@@ -104,7 +105,7 @@ public class GuardGroupServiceImpl extends ServiceImpl<GuardGroupMapper, GuardGr
                     if (guard == null) {
                         return null;
                     }
-                    return new WardActivityVO.WardInfo(ward.getId(), ward.getEmail(), ward.getUsername(), guard.getWardNickname(), null);
+                    return new WardActivityVO.WardInfo(ward.getId(), ward.getEmail(), ward.getUsername(), guard.getWardNickname(), ward.getProfile() == null ? ConstUtils.DEFAULT_AVATAR : ward.getProfile());
                 })
                 .toList();
         guardGroupActivityVO.setWardInfos(wardInfoList);
