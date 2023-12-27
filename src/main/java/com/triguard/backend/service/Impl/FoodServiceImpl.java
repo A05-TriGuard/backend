@@ -32,6 +32,9 @@ public class FoodServiceImpl extends ServiceImpl<FoodMapper, Food> implements Fo
      * @return 响应结果
      */
     public List<Food> getByNames(List<String> list) {
+        if (list == null || list.isEmpty()) {
+            return null;
+        }
         return this.query()
                 .in("name", list)
                 .list();
