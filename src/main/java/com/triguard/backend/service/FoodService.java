@@ -8,4 +8,8 @@ import java.util.List;
 public interface FoodService extends IService<Food> {
 
     List<Food> searchFood(String keyword);
+
+    List<Food> getByNames(List<String> list);
+
+    Integer getCalories(String food, Integer weight);
 }

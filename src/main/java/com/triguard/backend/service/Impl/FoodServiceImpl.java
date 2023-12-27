@@ -26,4 +26,33 @@ public class FoodServiceImpl extends ServiceImpl<FoodMapper, Food> implements Fo
                 .list();
     }
 
+    /**
+     * 根据食物名称列表获取食物记录
+     * @param list 食物名称列表
+     * @return 响应结果
+     */
+    public List<Food> getByNames(List<String> list) {
+        return this.query()
+                .in("name", list)
+                .list();
+    }
+
+    /**
+     * 获取食物热量
+     * @param food 食物名称
+     * @param weight 食物重量
+     * @return 食物热量
+     */
+    public Integer getCalories(String food, Integer weight) {
+        Food food1 = this.query()
+                .select("calories")
+                .eq("name", food)
+                .one();
+        if (food1 == null) {
+            return 0;
+        } else {
+            return food1.getCalories() * weight / 100;
+        }
+    }
+
 }

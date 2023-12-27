@@ -90,7 +90,7 @@ public class ExerciseServiceImpl extends ServiceImpl<ExerciseMapper, Exercise> i
                         if (timeFormat.format(dateFormat.parse(exerciseInfoVO.getStartTime())).compareTo(vo.getStartTime()) < 0) {
                             return false;
                         }
-                        if (timeFormat.format(dateFormat.parse(exerciseInfoVO.getEndTime())).compareTo(vo.getEndTime()) > 0) {
+                        if (exerciseInfoVO.getEndTime() == null || timeFormat.format(dateFormat.parse(exerciseInfoVO.getEndTime())).compareTo(vo.getEndTime()) > 0) {
                             return false;
                         }
                         System.out.println(exerciseInfoVO.getDuration());
