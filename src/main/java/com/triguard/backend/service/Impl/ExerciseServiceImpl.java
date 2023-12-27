@@ -68,10 +68,11 @@ public class ExerciseServiceImpl extends ServiceImpl<ExerciseMapper, Exercise> i
      * @return 运动信息
      */
     public Exercise getCurrentExercise(Integer accountId) {
-        return this.query()
+        List<Exercise> exercises = this.query()
                 .eq("account_id", accountId)
                 .orderByDesc("start_time")
-                .list().get(0);
+                .list();
+        return (exercises == null || exercises.isEmpty()) ? null : exercises.get(0);
     }
 
     /**

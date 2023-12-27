@@ -51,7 +51,9 @@ public class AdminArticleController {
         article.setTitle(title);
         article.setSubtitle(subtitle);
         article.setContent(content);
-        article.setCover(fileService.uploadMultipartFile(cover));
+        if (cover != null) {
+            article.setCover(fileService.uploadMultipartFile(cover));
+        }
         Article savedArticle = articleService.createArticle(article);
         return savedArticle == null ? RestBean.failure(400, "发布失败") : RestBean.success(savedArticle);
     }
