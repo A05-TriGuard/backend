@@ -44,7 +44,7 @@ public class AccountController {
         Account account = accountService.getById(accountId);
         AccountInfoVO accountInfoVO = new AccountInfoVO();
         BeanUtils.copyProperties(account, accountInfoVO);
-        if (account.getProfile() != null) {
+        if (account.getProfile() == null) {
             accountInfoVO.setProfile(ConstUtils.DEFAULT_AVATAR);
         }
         return RestBean.success(accountInfoVO);
