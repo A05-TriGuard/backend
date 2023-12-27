@@ -37,4 +37,6 @@ public final class ConstUtils {
     public final static String GET_FOOD_INFO_HISTORY = "get:food:info:history:";
     // 运动信息
     public static final String REDIS_KEY_EXERCISE = "exercise:";
+    // 默认头像
+    public static final String DEFAULT_AVATAR = "default_avatar.png";
 }

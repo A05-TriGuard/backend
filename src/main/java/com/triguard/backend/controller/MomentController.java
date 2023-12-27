@@ -73,7 +73,7 @@ public class MomentController {
             BeanUtils.copyProperties(moment, momentInfoVO);
             Account account = accountService.getById(moment.getAccountId());
             momentInfoVO.setUsername(account.getUsername());
-            momentInfoVO.setProfile(account.getProfile());
+            momentInfoVO.setProfile(account.getProfile() == null ? ConstUtils.DEFAULT_AVATAR : account.getProfile());
             momentInfoVO.setIsLike(momentService.isLike(accountId, moment.getId()));
             momentInfoVO.setIsFavorite(momentService.isFavorite(accountId, moment.getId()));
             momentInfoVO.setIsFollow(momentService.isFollow(accountId, moment.getAccountId()));
