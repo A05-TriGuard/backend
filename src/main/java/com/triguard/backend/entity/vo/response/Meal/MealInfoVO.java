@@ -17,6 +17,7 @@ public class MealInfoVO {
 
     @Data
     public static class SimpleMealInfo {
+        Integer id;
         String category;
         String food;
         Integer weight;

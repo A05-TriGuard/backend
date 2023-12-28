@@ -1,0 +1,206 @@
+2023-12-28 04:05:26.851  INFO 31332 --- [main] (system) c.t.b.service.Impl.FoodServiceImplTest   : Starting FoodServiceImplTest using Java 17.0.8 with PID 31332 (started by 23745 in D:\Class\澶т笁绉嬪瀛︽湡\杞欢宸ョ▼\TriGuard\TriGuardBackend)
+2023-12-28 04:05:26.854  INFO 31332 --- [main] (system) c.t.b.service.Impl.FoodServiceImplTest   : The following 1 profile is active: "dev"
+2023-12-28 04:05:28.242  INFO 31332 --- [main] (system) .s.d.r.c.RepositoryConfigurationDelegate : Multiple Spring Data modules found, entering strict repository configuration mode
+2023-12-28 04:05:28.248  INFO 31332 --- [main] (system) .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2023-12-28 04:05:28.306  INFO 31332 --- [main] (system) .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 29 ms. Found 0 Redis repository interfaces.
+2023-12-28 04:05:32.187  INFO 31332 --- [main] (system) o.s.s.web.DefaultSecurityFilterChain     : Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@6f22c1f1, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@2ee095c9, org.springframework.security.web.context.SecurityContextHolderFilter@3b8b5b40, org.springframework.security.web.header.HeaderWriterFilter@51cd2d2, org.springframework.security.web.authentication.logout.LogoutFilter@4cb82b09, com.triguard.backend.filter.JwtAuthenticationFilter@185a0811, com.triguard.backend.filter.RequestLogFilter@77fb1002, org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter@1136122a, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@2e1ad7de, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@395197cb, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@e2f6a45, org.springframework.security.web.session.SessionManagementFilter@42b500aa, org.springframework.security.web.access.ExceptionTranslationFilter@434a8938, org.springframework.security.web.access.intercept.AuthorizationFilter@5bccef9f]
+2023-12-28 04:05:33.679  INFO 31332 --- [main] (system) o.f.c.internal.license.VersionPrinter    : Flyway Community Edition 9.16.3 by Redgate
+2023-12-28 04:05:33.679  INFO 31332 --- [main] (system) o.f.c.internal.license.VersionPrinter    : See release notes here: https://rd.gt/416ObMi
+2023-12-28 04:05:33.679  INFO 31332 --- [main] (system) o.f.c.internal.license.VersionPrinter    : 
+2023-12-28 04:05:33.687  INFO 31332 --- [main] (system) com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2023-12-28 04:05:33.897  INFO 31332 --- [main] (system) com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@3d42b756
+2023-12-28 04:05:33.901  INFO 31332 --- [main] (system) com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2023-12-28 04:05:33.931  INFO 31332 --- [main] (system) o.f.c.i.database.base.BaseDatabaseType   : Database: jdbc:mysql://localhost:3306/triguard (MySQL 8.0)
+2023-12-28 04:05:34.009  INFO 31332 --- [main] (system) o.f.core.internal.command.DbValidate     : Successfully validated 1 migration (execution time 00:00.040s)
+2023-12-28 04:05:34.023  INFO 31332 --- [main] (system) o.f.core.internal.command.DbMigrate      : Current version of schema `triguard`: 1
+2023-12-28 04:05:34.024  INFO 31332 --- [main] (system) o.f.core.internal.command.DbMigrate      : Schema `triguard` is up to date. No migration necessary.
+2023-12-28 04:05:34.243  INFO 31332 --- [main] (system) o.s.a.r.c.CachingConnectionFactory       : Attempting to connect to: [localhost:5672]
+2023-12-28 04:05:34.256  INFO 31332 --- [main] (system) o.s.a.r.l.SimpleMessageListenerContainer : Broker not available; cannot force queue declarations during start: java.net.ConnectException: Connection refused: no further information
+2023-12-28 04:05:34.267  INFO 31332 --- [org.springframework.amqp.rabbit.RabbitListenerEndpointContainer#0-1] (system) o.s.a.r.c.CachingConnectionFactory       : Attempting to connect to: [localhost:5672]
+2023-12-28 04:05:34.270 ERROR 31332 --- [org.springframework.amqp.rabbit.RabbitListenerEndpointContainer#0-1] (system) o.s.a.r.l.SimpleMessageListenerContainer : Failed to check/redeclare auto-delete queue(s).
+
+org.springframework.amqp.AmqpConnectException: java.net.ConnectException: Connection refused: no further information
+	at org.springframework.amqp.rabbit.support.RabbitExceptionTranslator.convertRabbitAccessException(RabbitExceptionTranslator.java:61)
+	at org.springframework.amqp.rabbit.connection.AbstractConnectionFactory.createBareConnection(AbstractConnectionFactory.java:594)
+	at org.springframework.amqp.rabbit.connection.CachingConnectionFactory.createConnection(CachingConnectionFactory.java:711)
+	at org.springframework.amqp.rabbit.connection.ConnectionFactoryUtils.createConnection(ConnectionFactoryUtils.java:257)
+	at org.springframework.amqp.rabbit.core.RabbitTemplate.doExecute(RabbitTemplate.java:2225)
+	at org.springframework.amqp.rabbit.core.RabbitTemplate.execute(RabbitTemplate.java:2198)
+	at org.springframework.amqp.rabbit.core.RabbitTemplate.execute(RabbitTemplate.java:2178)
+	at org.springframework.amqp.rabbit.core.RabbitAdmin.getQueueInfo(RabbitAdmin.java:465)
+	at org.springframework.amqp.rabbit.core.RabbitAdmin.getQueueProperties(RabbitAdmin.java:449)
+	at org.springframework.amqp.rabbit.listener.AbstractMessageListenerContainer.attemptDeclarations(AbstractMessageListenerContainer.java:1937)
+	at org.springframework.amqp.rabbit.listener.AbstractMessageListenerContainer.redeclareElementsIfNecessary(AbstractMessageListenerContainer.java:1905)
+	at org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer$AsyncMessageProcessingConsumer.initialize(SimpleMessageListenerContainer.java:1381)
+	at org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer$AsyncMessageProcessingConsumer.run(SimpleMessageListenerContainer.java:1223)
+	at java.base/java.lang.Thread.run(Thread.java:833)
+Caused by: java.net.ConnectException: Connection refused: no further information
+	at java.base/sun.nio.ch.Net.pollConnect(Native Method)
+	at java.base/sun.nio.ch.Net.pollConnectNow(Net.java:672)
+	at java.base/sun.nio.ch.NioSocketImpl.timedFinishConnect(NioSocketImpl.java:542)
+	at java.base/sun.nio.ch.NioSocketImpl.connect(NioSocketImpl.java:597)
+	at java.base/java.net.SocksSocketImpl.connect(SocksSocketImpl.java:327)
+	at java.base/java.net.Socket.connect(Socket.java:633)
+	at com.rabbitmq.client.impl.SocketFrameHandlerFactory.create(SocketFrameHandlerFactory.java:61)
+	at com.rabbitmq.client.ConnectionFactory.newConnection(ConnectionFactory.java:1234)
+	at com.rabbitmq.client.ConnectionFactory.newConnection(ConnectionFactory.java:1184)
+	at org.springframework.amqp.rabbit.connection.AbstractConnectionFactory.connectAddresses(AbstractConnectionFactory.java:632)
+	at org.springframework.amqp.rabbit.connection.AbstractConnectionFactory.connect(AbstractConnectionFactory.java:607)
+	at org.springframework.amqp.rabbit.connection.AbstractConnectionFactory.createBareConnection(AbstractConnectionFactory.java:557)
+	... 12 common frames omitted
+
+2023-12-28 04:05:34.279  INFO 31332 --- [org.springframework.amqp.rabbit.RabbitListenerEndpointContainer#0-1] (system) o.s.a.r.c.CachingConnectionFactory       : Attempting to connect to: [localhost:5672]
+2023-12-28 04:05:34.293  INFO 31332 --- [main] (system) c.t.b.service.Impl.FoodServiceImplTest   : Started FoodServiceImplTest in 8.001 seconds (process running for 9.099)
+2023-12-28 04:05:34.298  INFO 31332 --- [main] (system) c.t.b.initializer.DirectoryInitializer   : Create static directory successfully.
+2023-12-28 04:05:35.323  INFO 31332 --- [org.springframework.amqp.rabbit.RabbitListenerEndpointContainer#0-2] (system) o.s.a.r.l.SimpleMessageListenerContainer : Waiting for workers to finish.
+2023-12-28 04:05:35.324  INFO 31332 --- [org.springframework.amqp.rabbit.RabbitListenerEndpointContainer#0-2] (system) o.s.a.r.l.SimpleMessageListenerContainer : Successfully waited for workers to finish.
+2023-12-28 04:05:35.329  INFO 31332 --- [SpringApplicationShutdownHook] (system) com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2023-12-28 04:05:35.332  INFO 31332 --- [SpringApplicationShutdownHook] (system) com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+2023-12-28 04:06:55.052  INFO 8140 --- [main] (system) c.t.b.service.Impl.FoodServiceImplTest   : Starting FoodServiceImplTest using Java 17.0.8 with PID 8140 (started by 23745 in D:\Class\澶т笁绉嬪瀛︽湡\杞欢宸ョ▼\TriGuard\TriGuardBackend)
+2023-12-28 04:06:55.054  INFO 8140 --- [main] (system) c.t.b.service.Impl.FoodServiceImplTest   : The following 1 profile is active: "dev"
+2023-12-28 04:06:56.365  INFO 8140 --- [main] (system) .s.d.r.c.RepositoryConfigurationDelegate : Multiple Spring Data modules found, entering strict repository configuration mode
+2023-12-28 04:06:56.370  INFO 8140 --- [main] (system) .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2023-12-28 04:06:56.421  INFO 8140 --- [main] (system) .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 29 ms. Found 0 Redis repository interfaces.
+2023-12-28 04:07:00.475  INFO 8140 --- [main] (system) o.s.s.web.DefaultSecurityFilterChain     : Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@72288480, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@4ea43d4d, org.springframework.security.web.context.SecurityContextHolderFilter@71f056a, org.springframework.security.web.header.HeaderWriterFilter@434a8938, org.springframework.security.web.authentication.logout.LogoutFilter@6104691c, com.triguard.backend.filter.JwtAuthenticationFilter@6f22c1f1, com.triguard.backend.filter.RequestLogFilter@2ee095c9, org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter@2f60e66a, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@3b8b5b40, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@1de6dc80, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@185a0811, org.springframework.security.web.session.SessionManagementFilter@51cd2d2, org.springframework.security.web.access.ExceptionTranslationFilter@36120a8b, org.springframework.security.web.access.intercept.AuthorizationFilter@2a0c244e]
+2023-12-28 04:07:01.893  INFO 8140 --- [main] (system) o.f.c.internal.license.VersionPrinter    : Flyway Community Edition 9.16.3 by Redgate
+2023-12-28 04:07:01.893  INFO 8140 --- [main] (system) o.f.c.internal.license.VersionPrinter    : See release notes here: https://rd.gt/416ObMi
+2023-12-28 04:07:01.893  INFO 8140 --- [main] (system) o.f.c.internal.license.VersionPrinter    : 
+2023-12-28 04:07:01.902  INFO 8140 --- [main] (system) com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2023-12-28 04:07:02.123  INFO 8140 --- [main] (system) com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@48cd8e71
+2023-12-28 04:07:02.124  INFO 8140 --- [main] (system) com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2023-12-28 04:07:02.154  INFO 8140 --- [main] (system) o.f.c.i.database.base.BaseDatabaseType   : Database: jdbc:mysql://localhost:3306/triguard (MySQL 8.0)
+2023-12-28 04:07:02.188  INFO 8140 --- [main] (system) o.f.core.internal.command.DbValidate     : Successfully validated 1 migration (execution time 00:00.013s)
+2023-12-28 04:07:02.199  INFO 8140 --- [main] (system) o.f.core.internal.command.DbMigrate      : Current version of schema `triguard`: 1
+2023-12-28 04:07:02.199  INFO 8140 --- [main] (system) o.f.core.internal.command.DbMigrate      : Schema `triguard` is up to date. No migration necessary.
+2023-12-28 04:07:02.368  INFO 8140 --- [main] (system) o.s.a.r.c.CachingConnectionFactory       : Attempting to connect to: [localhost:5672]
+2023-12-28 04:07:02.467  INFO 8140 --- [main] (system) o.s.a.r.c.CachingConnectionFactory       : Created new connection: rabbitConnectionFactory#59371066:0/SimpleConnection@1822a61b [delegate=amqp://guest@127.0.0.1:5672/, localPort=56096]
+2023-12-28 04:07:02.593  INFO 8140 --- [main] (system) c.t.b.service.Impl.FoodServiceImplTest   : Started FoodServiceImplTest in 8.161 seconds (process running for 9.175)
+2023-12-28 04:07:03.407  INFO 8140 --- [org.springframework.amqp.rabbit.RabbitListenerEndpointContainer#0-2] (system) o.s.a.r.l.SimpleMessageListenerContainer : Waiting for workers to finish.
+2023-12-28 04:07:03.597  INFO 8140 --- [org.springframework.amqp.rabbit.RabbitListenerEndpointContainer#0-2] (system) o.s.a.r.l.SimpleMessageListenerContainer : Successfully waited for workers to finish.
+2023-12-28 04:07:03.608  INFO 8140 --- [SpringApplicationShutdownHook] (system) com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2023-12-28 04:07:03.616  INFO 8140 --- [SpringApplicationShutdownHook] (system) com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+2023-12-28 04:09:19.124  INFO 33108 --- [main] (system) c.t.b.service.Impl.FoodServiceImplTest   : Starting FoodServiceImplTest using Java 17.0.8 with PID 33108 (started by 23745 in D:\Class\大三秋季学期\软件工程\TriGuard\TriGuardBackend)
+2023-12-28 04:09:19.126  INFO 33108 --- [main] (system) c.t.b.service.Impl.FoodServiceImplTest   : The following 1 profile is active: "dev"
+2023-12-28 04:09:20.554  INFO 33108 --- [main] (system) .s.d.r.c.RepositoryConfigurationDelegate : Multiple Spring Data modules found, entering strict repository configuration mode
+2023-12-28 04:09:20.559  INFO 33108 --- [main] (system) .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2023-12-28 04:09:20.607  INFO 33108 --- [main] (system) .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 28 ms. Found 0 Redis repository interfaces.
+2023-12-28 04:09:24.720  INFO 33108 --- [main] (system) o.s.s.web.DefaultSecurityFilterChain     : Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@55b45ea1, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@d5a72cd, org.springframework.security.web.context.SecurityContextHolderFilter@9cb927e, org.springframework.security.web.header.HeaderWriterFilter@666b91db, org.springframework.security.web.authentication.logout.LogoutFilter@4e14d520, com.triguard.backend.filter.JwtAuthenticationFilter@45f95ac0, com.triguard.backend.filter.RequestLogFilter@3b77940f, org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter@776d8097, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@1325f967, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@6c9e74f3, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@4c418496, org.springframework.security.web.session.SessionManagementFilter@663cf5d7, org.springframework.security.web.access.ExceptionTranslationFilter@335896bd, org.springframework.security.web.access.intercept.AuthorizationFilter@9499643]
+2023-12-28 04:09:26.219  INFO 33108 --- [main] (system) o.f.c.internal.license.VersionPrinter    : Flyway Community Edition 9.16.3 by Redgate
+2023-12-28 04:09:26.219  INFO 33108 --- [main] (system) o.f.c.internal.license.VersionPrinter    : See release notes here: https://rd.gt/416ObMi
+2023-12-28 04:09:26.219  INFO 33108 --- [main] (system) o.f.c.internal.license.VersionPrinter    : 
+2023-12-28 04:09:26.228  INFO 33108 --- [main] (system) com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2023-12-28 04:09:26.420  INFO 33108 --- [main] (system) com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@56d3af4d
+2023-12-28 04:09:26.422  INFO 33108 --- [main] (system) com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2023-12-28 04:09:26.454  INFO 33108 --- [main] (system) o.f.c.i.database.base.BaseDatabaseType   : Database: jdbc:mysql://localhost:3306/triguard (MySQL 8.0)
+2023-12-28 04:09:26.497  INFO 33108 --- [main] (system) o.f.core.internal.command.DbValidate     : Successfully validated 1 migration (execution time 00:00.017s)
+2023-12-28 04:09:26.510  INFO 33108 --- [main] (system) o.f.core.internal.command.DbMigrate      : Current version of schema `triguard`: 1
+2023-12-28 04:09:26.510  INFO 33108 --- [main] (system) o.f.core.internal.command.DbMigrate      : Schema `triguard` is up to date. No migration necessary.
+2023-12-28 04:09:26.670  INFO 33108 --- [main] (system) o.s.a.r.c.CachingConnectionFactory       : Attempting to connect to: [localhost:5672]
+2023-12-28 04:09:26.743  INFO 33108 --- [main] (system) o.s.a.r.c.CachingConnectionFactory       : Created new connection: rabbitConnectionFactory#6dc2279c:0/SimpleConnection@63ede2a0 [delegate=amqp://guest@127.0.0.1:5672/, localPort=59013]
+2023-12-28 04:09:26.822  INFO 33108 --- [main] (system) c.t.b.service.Impl.FoodServiceImplTest   : Started FoodServiceImplTest in 8.248 seconds (process running for 9.206)
+2023-12-28 04:09:27.706  INFO 33108 --- [main] (system) t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.triguard.backend.TriGuardBackendApplicationTests]: TriGuardBackendApplicationTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2023-12-28 04:09:27.718  INFO 33108 --- [main] (system) .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.triguard.backend.TriGuardBackendApplication for test class com.triguard.backend.TriGuardBackendApplicationTests
+2023-12-28 04:09:27.754  INFO 33108 --- [org.springframework.amqp.rabbit.RabbitListenerEndpointContainer#0-2] (system) o.s.a.r.l.SimpleMessageListenerContainer : Waiting for workers to finish.
+2023-12-28 04:09:27.820  INFO 33108 --- [org.springframework.amqp.rabbit.RabbitListenerEndpointContainer#0-2] (system) o.s.a.r.l.SimpleMessageListenerContainer : Successfully waited for workers to finish.
+2023-12-28 04:09:27.832  INFO 33108 --- [SpringApplicationShutdownHook] (system) com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2023-12-28 04:09:27.842  INFO 33108 --- [SpringApplicationShutdownHook] (system) com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+2023-12-28 04:31:57.479  INFO 29620 --- [main] (system) c.t.b.service.Impl.FoodServiceImplTest   : Starting FoodServiceImplTest using Java 17.0.8 with PID 29620 (started by 23745 in D:\Class\大三秋季学期\软件工程\TriGuard\TriGuardBackend)
+2023-12-28 04:31:57.482  INFO 29620 --- [main] (system) c.t.b.service.Impl.FoodServiceImplTest   : The following 1 profile is active: "dev"
+2023-12-28 04:31:59.435  INFO 29620 --- [main] (system) .s.d.r.c.RepositoryConfigurationDelegate : Multiple Spring Data modules found, entering strict repository configuration mode
+2023-12-28 04:31:59.450  INFO 29620 --- [main] (system) .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2023-12-28 04:31:59.543  INFO 29620 --- [main] (system) .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 52 ms. Found 0 Redis repository interfaces.
+2023-12-28 04:32:03.836  INFO 29620 --- [main] (system) o.s.s.web.DefaultSecurityFilterChain     : Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@e0d5388, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@471e3e69, org.springframework.security.web.context.SecurityContextHolderFilter@4db5663b, org.springframework.security.web.header.HeaderWriterFilter@eb87c61, org.springframework.security.web.authentication.logout.LogoutFilter@4288c5a8, com.triguard.backend.filter.JwtAuthenticationFilter@82076de, com.triguard.backend.filter.RequestLogFilter@4179260d, org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter@3426ce80, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@3738bd7a, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@466b5ed5, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@250cbcb9, org.springframework.security.web.session.SessionManagementFilter@39415641, org.springframework.security.web.access.ExceptionTranslationFilter@2c6a222a, org.springframework.security.web.access.intercept.AuthorizationFilter@684d5845]
+2023-12-28 04:32:05.247  INFO 29620 --- [main] (system) o.f.c.internal.license.VersionPrinter    : Flyway Community Edition 9.16.3 by Redgate
+2023-12-28 04:32:05.247  INFO 29620 --- [main] (system) o.f.c.internal.license.VersionPrinter    : See release notes here: https://rd.gt/416ObMi
+2023-12-28 04:32:05.247  INFO 29620 --- [main] (system) o.f.c.internal.license.VersionPrinter    : 
+2023-12-28 04:32:05.256  INFO 29620 --- [main] (system) com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2023-12-28 04:32:05.510  INFO 29620 --- [main] (system) com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@433cec3b
+2023-12-28 04:32:05.512  INFO 29620 --- [main] (system) com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2023-12-28 04:32:05.548  INFO 29620 --- [main] (system) o.f.c.i.database.base.BaseDatabaseType   : Database: jdbc:mysql://localhost:3306/triguard (MySQL 8.0)
+2023-12-28 04:32:05.589  INFO 29620 --- [main] (system) o.f.core.internal.command.DbValidate     : Successfully validated 1 migration (execution time 00:00.016s)
+2023-12-28 04:32:05.605  INFO 29620 --- [main] (system) o.f.core.internal.command.DbMigrate      : Current version of schema `triguard`: 1
+2023-12-28 04:32:05.606  INFO 29620 --- [main] (system) o.f.core.internal.command.DbMigrate      : Schema `triguard` is up to date. No migration necessary.
+2023-12-28 04:32:05.851  INFO 29620 --- [main] (system) o.s.a.r.c.CachingConnectionFactory       : Attempting to connect to: [localhost:5672]
+2023-12-28 04:32:05.921  INFO 29620 --- [main] (system) o.s.a.r.c.CachingConnectionFactory       : Created new connection: rabbitConnectionFactory#f456711:0/SimpleConnection@4ddecf15 [delegate=amqp://guest@127.0.0.1:5672/, localPort=57599]
+2023-12-28 04:32:05.984  INFO 29620 --- [main] (system) c.t.b.service.Impl.FoodServiceImplTest   : Started FoodServiceImplTest in 9.488 seconds (process running for 12.053)
+2023-12-28 04:32:07.142  INFO 29620 --- [main] (system) t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.triguard.backend.TriGuardBackendApplicationTests]: TriGuardBackendApplicationTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2023-12-28 04:32:07.151  INFO 29620 --- [main] (system) .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.triguard.backend.TriGuardBackendApplication for test class com.triguard.backend.TriGuardBackendApplicationTests
+2023-12-28 04:32:07.919  INFO 29620 --- [org.springframework.amqp.rabbit.RabbitListenerEndpointContainer#0-2] (system) o.s.a.r.l.SimpleMessageListenerContainer : Waiting for workers to finish.
+2023-12-28 04:32:07.984  INFO 29620 --- [org.springframework.amqp.rabbit.RabbitListenerEndpointContainer#0-2] (system) o.s.a.r.l.SimpleMessageListenerContainer : Successfully waited for workers to finish.
+2023-12-28 04:32:07.994  INFO 29620 --- [SpringApplicationShutdownHook] (system) com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2023-12-28 04:32:08.002  INFO 29620 --- [SpringApplicationShutdownHook] (system) com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+2023-12-28 04:34:31.526  INFO 17000 --- [main] (system) c.t.b.service.Impl.FoodServiceImplTest   : Starting FoodServiceImplTest using Java 17.0.8 with PID 17000 (started by 23745 in D:\Class\大三秋季学期\软件工程\TriGuard\TriGuardBackend)
+2023-12-28 04:34:31.528  INFO 17000 --- [main] (system) c.t.b.service.Impl.FoodServiceImplTest   : The following 1 profile is active: "dev"
+2023-12-28 04:34:33.524  INFO 17000 --- [main] (system) .s.d.r.c.RepositoryConfigurationDelegate : Multiple Spring Data modules found, entering strict repository configuration mode
+2023-12-28 04:34:33.536  INFO 17000 --- [main] (system) .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2023-12-28 04:34:33.629  INFO 17000 --- [main] (system) .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 49 ms. Found 0 Redis repository interfaces.
+2023-12-28 04:34:37.982  INFO 17000 --- [main] (system) o.s.s.web.DefaultSecurityFilterChain     : Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@3249c81a, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@508a1ef0, org.springframework.security.web.context.SecurityContextHolderFilter@15fa043, org.springframework.security.web.header.HeaderWriterFilter@4a9f02f4, org.springframework.security.web.authentication.logout.LogoutFilter@6d6a20f7, com.triguard.backend.filter.JwtAuthenticationFilter@64845c40, com.triguard.backend.filter.RequestLogFilter@68073c8d, org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter@47c5ad11, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@11f505e8, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@5d548872, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@1472308f, org.springframework.security.web.session.SessionManagementFilter@3338057a, org.springframework.security.web.access.ExceptionTranslationFilter@6da075fe, org.springframework.security.web.access.intercept.AuthorizationFilter@5df01ff5]
+2023-12-28 04:34:39.377  INFO 17000 --- [main] (system) o.f.c.internal.license.VersionPrinter    : Flyway Community Edition 9.16.3 by Redgate
+2023-12-28 04:34:39.378  INFO 17000 --- [main] (system) o.f.c.internal.license.VersionPrinter    : See release notes here: https://rd.gt/416ObMi
+2023-12-28 04:34:39.378  INFO 17000 --- [main] (system) o.f.c.internal.license.VersionPrinter    : 
+2023-12-28 04:34:39.388  INFO 17000 --- [main] (system) com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2023-12-28 04:34:39.665  INFO 17000 --- [main] (system) com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@68a2b38e
+2023-12-28 04:34:39.667  INFO 17000 --- [main] (system) com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2023-12-28 04:34:39.706  INFO 17000 --- [main] (system) o.f.c.i.database.base.BaseDatabaseType   : Database: jdbc:mysql://localhost:3306/triguard (MySQL 8.0)
+2023-12-28 04:34:39.750  INFO 17000 --- [main] (system) o.f.core.internal.command.DbValidate     : Successfully validated 1 migration (execution time 00:00.018s)
+2023-12-28 04:34:39.766  INFO 17000 --- [main] (system) o.f.core.internal.command.DbMigrate      : Current version of schema `triguard`: 1
+2023-12-28 04:34:39.766  INFO 17000 --- [main] (system) o.f.core.internal.command.DbMigrate      : Schema `triguard` is up to date. No migration necessary.
+2023-12-28 04:34:40.003  INFO 17000 --- [main] (system) o.s.a.r.c.CachingConnectionFactory       : Attempting to connect to: [localhost:5672]
+2023-12-28 04:34:40.063  INFO 17000 --- [main] (system) o.s.a.r.c.CachingConnectionFactory       : Created new connection: rabbitConnectionFactory#4e42beba:0/SimpleConnection@11385e91 [delegate=amqp://guest@127.0.0.1:5672/, localPort=55748]
+2023-12-28 04:34:40.125  INFO 17000 --- [main] (system) c.t.b.service.Impl.FoodServiceImplTest   : Started FoodServiceImplTest in 9.422 seconds (process running for 12.118)
+2023-12-28 04:34:41.013  INFO 17000 --- [main] (system) t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.triguard.backend.TriGuardBackendApplicationTests]: TriGuardBackendApplicationTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2023-12-28 04:34:41.023  INFO 17000 --- [main] (system) .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.triguard.backend.TriGuardBackendApplication for test class com.triguard.backend.TriGuardBackendApplicationTests
+2023-12-28 04:34:41.770  INFO 17000 --- [org.springframework.amqp.rabbit.RabbitListenerEndpointContainer#0-2] (system) o.s.a.r.l.SimpleMessageListenerContainer : Waiting for workers to finish.
+2023-12-28 04:34:42.125  INFO 17000 --- [org.springframework.amqp.rabbit.RabbitListenerEndpointContainer#0-2] (system) o.s.a.r.l.SimpleMessageListenerContainer : Successfully waited for workers to finish.
+2023-12-28 04:34:42.135  INFO 17000 --- [SpringApplicationShutdownHook] (system) com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2023-12-28 04:34:42.142  INFO 17000 --- [SpringApplicationShutdownHook] (system) com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+2023-12-28 04:37:59.129  INFO 20848 --- [main] (system) c.t.b.service.Impl.FoodServiceImplTest   : Starting FoodServiceImplTest using Java 17.0.8 with PID 20848 (started by 23745 in D:\Class\大三秋季学期\软件工程\TriGuard\TriGuardBackend)
+2023-12-28 04:37:59.133  INFO 20848 --- [main] (system) c.t.b.service.Impl.FoodServiceImplTest   : The following 1 profile is active: "dev"
+2023-12-28 04:38:01.034  INFO 20848 --- [main] (system) .s.d.r.c.RepositoryConfigurationDelegate : Multiple Spring Data modules found, entering strict repository configuration mode
+2023-12-28 04:38:01.045  INFO 20848 --- [main] (system) .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2023-12-28 04:38:01.157  INFO 20848 --- [main] (system) .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 54 ms. Found 0 Redis repository interfaces.
+2023-12-28 04:38:05.537  INFO 20848 --- [main] (system) o.s.s.web.DefaultSecurityFilterChain     : Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@15dcaa32, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@372d7420, org.springframework.security.web.context.SecurityContextHolderFilter@74197f00, org.springframework.security.web.header.HeaderWriterFilter@197d38a, org.springframework.security.web.authentication.logout.LogoutFilter@720907c9, com.triguard.backend.filter.JwtAuthenticationFilter@41334af0, com.triguard.backend.filter.RequestLogFilter@1d17945d, org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter@aea96b0, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@52ac57e7, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@37df3dee, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@6d6a20f7, org.springframework.security.web.session.SessionManagementFilter@343f01c7, org.springframework.security.web.access.ExceptionTranslationFilter@7432a39e, org.springframework.security.web.access.intercept.AuthorizationFilter@57b03187]
+2023-12-28 04:38:06.953  INFO 20848 --- [main] (system) o.f.c.internal.license.VersionPrinter    : Flyway Community Edition 9.16.3 by Redgate
+2023-12-28 04:38:06.953  INFO 20848 --- [main] (system) o.f.c.internal.license.VersionPrinter    : See release notes here: https://rd.gt/416ObMi
+2023-12-28 04:38:06.953  INFO 20848 --- [main] (system) o.f.c.internal.license.VersionPrinter    : 
+2023-12-28 04:38:06.963  INFO 20848 --- [main] (system) com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2023-12-28 04:38:07.200  INFO 20848 --- [main] (system) com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@53b7580
+2023-12-28 04:38:07.202  INFO 20848 --- [main] (system) com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2023-12-28 04:38:07.240  INFO 20848 --- [main] (system) o.f.c.i.database.base.BaseDatabaseType   : Database: jdbc:mysql://localhost:3306/triguard (MySQL 8.0)
+2023-12-28 04:38:07.286  INFO 20848 --- [main] (system) o.f.core.internal.command.DbValidate     : Successfully validated 1 migration (execution time 00:00.018s)
+2023-12-28 04:38:07.301  INFO 20848 --- [main] (system) o.f.core.internal.command.DbMigrate      : Current version of schema `triguard`: 1
+2023-12-28 04:38:07.302  INFO 20848 --- [main] (system) o.f.core.internal.command.DbMigrate      : Schema `triguard` is up to date. No migration necessary.
+2023-12-28 04:38:07.544  INFO 20848 --- [main] (system) o.s.a.r.c.CachingConnectionFactory       : Attempting to connect to: [localhost:5672]
+2023-12-28 04:38:07.617  INFO 20848 --- [main] (system) o.s.a.r.c.CachingConnectionFactory       : Created new connection: rabbitConnectionFactory#4bd0d62f:0/SimpleConnection@680b9a12 [delegate=amqp://guest@127.0.0.1:5672/, localPort=52182]
+2023-12-28 04:38:07.684  INFO 20848 --- [main] (system) c.t.b.service.Impl.FoodServiceImplTest   : Started FoodServiceImplTest in 9.495 seconds (process running for 12.124)
+2023-12-28 04:38:08.658  INFO 20848 --- [main] (system) t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.triguard.backend.TriGuardBackendApplicationTests]: TriGuardBackendApplicationTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2023-12-28 04:38:08.671  INFO 20848 --- [main] (system) .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.triguard.backend.TriGuardBackendApplication for test class com.triguard.backend.TriGuardBackendApplicationTests
+2023-12-28 04:38:09.428  INFO 20848 --- [org.springframework.amqp.rabbit.RabbitListenerEndpointContainer#0-2] (system) o.s.a.r.l.SimpleMessageListenerContainer : Waiting for workers to finish.
+2023-12-28 04:38:09.684  INFO 20848 --- [org.springframework.amqp.rabbit.RabbitListenerEndpointContainer#0-2] (system) o.s.a.r.l.SimpleMessageListenerContainer : Successfully waited for workers to finish.
+2023-12-28 04:38:09.695  INFO 20848 --- [SpringApplicationShutdownHook] (system) com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2023-12-28 04:38:09.702  INFO 20848 --- [SpringApplicationShutdownHook] (system) com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+2023-12-28 04:39:02.291  INFO 8188 --- [main] (system) c.t.b.service.Impl.FoodServiceImplTest   : Starting FoodServiceImplTest using Java 17.0.8 with PID 8188 (started by 23745 in D:\Class\大三秋季学期\软件工程\TriGuard\TriGuardBackend)
+2023-12-28 04:39:02.292  INFO 8188 --- [main] (system) c.t.b.service.Impl.FoodServiceImplTest   : The following 1 profile is active: "dev"
+2023-12-28 04:39:04.129  INFO 8188 --- [main] (system) .s.d.r.c.RepositoryConfigurationDelegate : Multiple Spring Data modules found, entering strict repository configuration mode
+2023-12-28 04:39:04.138  INFO 8188 --- [main] (system) .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2023-12-28 04:39:04.259  INFO 8188 --- [main] (system) .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 61 ms. Found 0 Redis repository interfaces.
+2023-12-28 04:39:08.741  INFO 8188 --- [main] (system) o.s.s.web.DefaultSecurityFilterChain     : Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@7aa45a14, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@3f169051, org.springframework.security.web.context.SecurityContextHolderFilter@48841b10, org.springframework.security.web.header.HeaderWriterFilter@466b5ed5, org.springframework.security.web.authentication.logout.LogoutFilter@10742c78, com.triguard.backend.filter.JwtAuthenticationFilter@7e3559b4, com.triguard.backend.filter.RequestLogFilter@24ac4cf4, org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter@13d72307, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@752448d2, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@10c8abf0, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@7c80c68f, org.springframework.security.web.session.SessionManagementFilter@31287930, org.springframework.security.web.access.ExceptionTranslationFilter@64fbc914, org.springframework.security.web.access.intercept.AuthorizationFilter@250cbcb9]
+2023-12-28 04:39:10.211  INFO 8188 --- [main] (system) o.f.c.internal.license.VersionPrinter    : Flyway Community Edition 9.16.3 by Redgate
+2023-12-28 04:39:10.212  INFO 8188 --- [main] (system) o.f.c.internal.license.VersionPrinter    : See release notes here: https://rd.gt/416ObMi
+2023-12-28 04:39:10.212  INFO 8188 --- [main] (system) o.f.c.internal.license.VersionPrinter    : 
+2023-12-28 04:39:10.222  INFO 8188 --- [main] (system) com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2023-12-28 04:39:10.476  INFO 8188 --- [main] (system) com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@777fb0e0
+2023-12-28 04:39:10.479  INFO 8188 --- [main] (system) com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2023-12-28 04:39:10.517  INFO 8188 --- [main] (system) o.f.c.i.database.base.BaseDatabaseType   : Database: jdbc:mysql://localhost:3306/triguard (MySQL 8.0)
+2023-12-28 04:39:10.561  INFO 8188 --- [main] (system) o.f.core.internal.command.DbValidate     : Successfully validated 1 migration (execution time 00:00.018s)
+2023-12-28 04:39:10.578  INFO 8188 --- [main] (system) o.f.core.internal.command.DbMigrate      : Current version of schema `triguard`: 1
+2023-12-28 04:39:10.579  INFO 8188 --- [main] (system) o.f.core.internal.command.DbMigrate      : Schema `triguard` is up to date. No migration necessary.
+2023-12-28 04:39:10.782  INFO 8188 --- [main] (system) o.s.a.r.c.CachingConnectionFactory       : Attempting to connect to: [localhost:5672]
+2023-12-28 04:39:10.844  INFO 8188 --- [main] (system) o.s.a.r.c.CachingConnectionFactory       : Created new connection: rabbitConnectionFactory#63cf0da6:0/SimpleConnection@4550e457 [delegate=amqp://guest@127.0.0.1:5672/, localPort=52251]
+2023-12-28 04:39:10.909  INFO 8188 --- [main] (system) c.t.b.service.Impl.FoodServiceImplTest   : Started FoodServiceImplTest in 9.715 seconds (process running for 12.352)
+2023-12-28 04:39:12.039  INFO 8188 --- [main] (system) t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.triguard.backend.TriGuardBackendApplicationTests]: TriGuardBackendApplicationTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2023-12-28 04:39:12.053  INFO 8188 --- [main] (system) .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.triguard.backend.TriGuardBackendApplication for test class com.triguard.backend.TriGuardBackendApplicationTests
+2023-12-28 04:39:12.879  INFO 8188 --- [org.springframework.amqp.rabbit.RabbitListenerEndpointContainer#0-2] (system) o.s.a.r.l.SimpleMessageListenerContainer : Waiting for workers to finish.
+2023-12-28 04:39:12.907  INFO 8188 --- [org.springframework.amqp.rabbit.RabbitListenerEndpointContainer#0-2] (system) o.s.a.r.l.SimpleMessageListenerContainer : Successfully waited for workers to finish.
+2023-12-28 04:39:12.917  INFO 8188 --- [SpringApplicationShutdownHook] (system) com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2023-12-28 04:39:12.926  INFO 8188 --- [SpringApplicationShutdownHook] (system) com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
