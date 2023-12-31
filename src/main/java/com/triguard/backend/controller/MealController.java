@@ -80,7 +80,7 @@ public class MealController {
      */
     @GetMapping("/get")
     @Operation(summary = "获取饮食记录")
-    public RestBean<MealInfoVO> getMeal(@RequestParam Integer accountId,
+    public RestBean<MealInfoVO> getMeal(@RequestParam(required = false) Integer accountId,
                                         @RequestParam String date,
                                         @RequestParam String category,
                                         HttpServletRequest request) {
@@ -140,7 +140,8 @@ public class MealController {
      */
     @GetMapping("/get-goal")
     @Operation(summary = "获取饮食目标")
-    public RestBean<MealGoal> getMealGoal(@RequestParam Integer accountId, HttpServletRequest request) {
+    public RestBean<MealGoal> getMealGoal(@RequestParam(required = false) Integer accountId,
+                                          HttpServletRequest request) {
         if (accountId == null) {
             accountId = (Integer) request.getAttribute(ConstUtils.ATTR_USER_ID);
         }
