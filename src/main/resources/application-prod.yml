@@ -12,9 +12,17 @@ spring:
       max-file-size: 1GB
       max-request-size: 1GB
   mail:
-    host: smtp.qq.com
-    username: yuc0902@qq.com
-    password: ejlwyijtqxzcdjjc
+    host: smtp.gmail.com
+    port: 587
+    username: sheltonokuneva9@gmail.com
+    password: bvqgvaeoqnvzvjad
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            required: true
   data:
     redis:
       host: redis

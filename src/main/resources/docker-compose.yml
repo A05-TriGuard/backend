@@ -6,7 +6,7 @@ services:
       context: .
       dockerfile: Dockerfile
     volumes:
-      - ./logs:/app/logs
+      - ./log:/app/log
       - ./static:/app/static
     ports:
       - "8080:8080"
@@ -24,7 +24,8 @@ services:
     ports:
       - "3306:3306"
     volumes:
-      - mysql:/var/lib/mysql
+      - ./mysql:/var/lib/mysql
+      - ./initdb:/docker-entrypoint-initdb.d
 
   redis:
     image: redis:latest
