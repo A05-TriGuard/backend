@@ -10,7 +10,7 @@
     </parent>
     <groupId>com.triguard</groupId>
     <artifactId>TriGuardBackend</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>deploy</version>
     <name>TriGuardBackend</name>
     <description>TriGuardBackend</description>
     <properties>
@@ -124,16 +124,6 @@
             </activation>
             <properties>
                 <environment>dev</environment>
-            </properties>
-        </profile>
-        <!-- 服务器环境 -->
-        <profile>
-            <id>ubuntu</id>
-            <activation>
-                <activeByDefault>false</activeByDefault>
-            </activation>
-            <properties>
-                <environment>ubuntu</environment>
             </properties>
         </profile>
         <!-- 生产环境 -->

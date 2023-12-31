@@ -1,24 +1,30 @@
-#生产环境配置
-server:
-  port: 80
 springdoc:
-  api-docs:
-    enabled: false
+  paths-to-match: /api/**
+  swagger-ui:
+    operations-sorter: alpha
 mybatis-plus:
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
 spring:
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 1GB
+      max-request-size: 1GB
   mail:
     host: smtp.qq.com
     username: yuc0902@qq.com
     password: ejlwyijtqxzcdjjc
+  data:
+    redis:
+      host: redis
   rabbitmq:
-    addresses: localhost
+    addresses: rabbitmq
     username: guest
     password: guest
     virtual-host: /
   datasource:
-    url: jdbc:mysql://localhost:3306/triguard?useUnicode=true&characterEncoding=utf8&serverTimezone=GMT%2B8&useSSL=false&allowPublicKeyRetrieval=true
+    url: jdbc:mysql://mysql:3306/triguard?useUnicode=true&characterEncoding=utf8&serverTimezone=GMT%2B8&useSSL=false&allowPublicKeyRetrieval=true
     username: root
     password: 123456
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -39,7 +45,7 @@ spring:
       mail-limit: 60
     flow:
       period: 3
-      limit: 10
+      limit: 50
       block: 30
     cors:
       origin: '*'
