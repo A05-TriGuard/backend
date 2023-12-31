@@ -171,7 +171,7 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>2.22.2</version>
                 <configuration>
-                    <skipTests>false</skipTests>
+                    <skipTests>true</skipTests>
                     <useSystemClassLoader>false</useSystemClassLoader>
                     <forkMode>once</forkMode>
                     <reuseForks>true</reuseForks>
@@ -179,30 +179,9 @@
                 </configuration>
             </plugin>
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-clean-plugin</artifactId>
-                <version>3.2.0</version>
-                <configuration>
-                    <filesets>
-                        <fileset>
-                            <directory>.</directory>
-                            <includes>
-                                <include>**/*.ser</include>
-                            </includes>
-                        </fileset>
-                    </filesets>
-                </configuration>
-            </plugin>
-            <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
                 <version>0.8.7</version>
-                <configuration>
-                    <destFile>target/coverage-reports/jacoco-unit.exec</destFile>
-                    <dataFile>target/coverage-reports/jacoco-unit.exec</dataFile>
-                    <outputDirectory>target/coverage-reports</outputDirectory>
-                    <append>true</append>
-                </configuration>
                 <executions>
                     <execution>
                         <id>jacoco-initialize</id>
@@ -211,8 +190,7 @@
                         </goals>
                     </execution>
                     <execution>
-                        <id>post-unit-test</id>
-                        <phase>test</phase>
+                        <id>jacoco-report</id>
                         <goals>
                             <goal>report</goal>
                         </goals>

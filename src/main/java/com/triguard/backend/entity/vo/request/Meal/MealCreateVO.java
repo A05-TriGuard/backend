@@ -5,6 +5,7 @@ import lombok.Data;
 
 @Data
 public class MealCreateVO {
+    Integer accountId;
     @Pattern(regexp = "^\\d{4}-\\d{2}-\\d{2}$")
     String date;
     String category;

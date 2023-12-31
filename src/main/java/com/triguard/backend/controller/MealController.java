@@ -46,7 +46,10 @@ public class MealController {
     @Operation(summary = "添加饮食记录")
     public RestBean<Meal> createMeal(@RequestBody @Valid MealCreateVO mealCreateVO,
                                      HttpServletRequest request) {
-        Integer accountId = (Integer) request.getAttribute(ConstUtils.ATTR_USER_ID);
+        Integer accountId = mealCreateVO.getAccountId();
+        if (mealCreateVO.getAccountId() == null) {
+            accountId = (Integer) request.getAttribute(ConstUtils.ATTR_USER_ID);
+        }
         Meal meal = mealService.createMeal(accountId, mealCreateVO);
         if (meal == null) {
             return RestBean.failure(400, "添加饮食记录失败");
@@ -77,10 +80,13 @@ public class MealController {
      */
     @GetMapping("/get")
     @Operation(summary = "获取饮食记录")
-    public RestBean<MealInfoVO> getMeal(@RequestParam String date,
+    public RestBean<MealInfoVO> getMeal(@RequestParam Integer accountId,
+                                        @RequestParam String date,
                                         @RequestParam String category,
                                         HttpServletRequest request) {
-        Integer accountId = (Integer) request.getAttribute(ConstUtils.ATTR_USER_ID);
+        if (accountId == null) {
+            accountId = (Integer) request.getAttribute(ConstUtils.ATTR_USER_ID);
+        }
         List<Meal> mealList = mealService.getMeals(accountId, date, category);
         if (mealList == null) {
             return RestBean.success();
@@ -119,7 +125,10 @@ public class MealController {
     @Operation(summary = "设置饮食目标")
     public RestBean<MealGoal> setMealGoal(@RequestBody MealGoal mealGoal,
                                       HttpServletRequest request) {
-        Integer accountId = (Integer) request.getAttribute(ConstUtils.ATTR_USER_ID);
+        Integer accountId = mealGoal.getAccountId();
+        if (mealGoal.getAccountId() == null) {
+            accountId = (Integer) request.getAttribute(ConstUtils.ATTR_USER_ID);
+        }
         Boolean isSuccess = mealGoalService.setMealGoal(accountId, mealGoal);
         return isSuccess ? RestBean.success() : RestBean.failure(400, "设置饮食目标失败");
     }
@@ -131,8 +140,10 @@ public class MealController {
      */
     @GetMapping("/get-goal")
     @Operation(summary = "获取饮食目标")
-    public RestBean<MealGoal> getMealGoal(HttpServletRequest request) {
-        Integer accountId = (Integer) request.getAttribute(ConstUtils.ATTR_USER_ID);
+    public RestBean<MealGoal> getMealGoal(@RequestParam Integer accountId, HttpServletRequest request) {
+        if (accountId == null) {
+            accountId = (Integer) request.getAttribute(ConstUtils.ATTR_USER_ID);
+        }
         MealGoal mealGoal = mealGoalService.query().eq("account_id", accountId).one();
         return RestBean.success(mealGoal);
     }
