@@ -11,7 +11,7 @@ import java.io.IOException;
 public class FileServiceImpl implements FileService {
 
     public String uploadMultipartFile(MultipartFile file) {
-        if (file.isEmpty()) {
+        if (file == null || file.isEmpty()) {
             throw new RuntimeException("文件为空");
         }
         try {

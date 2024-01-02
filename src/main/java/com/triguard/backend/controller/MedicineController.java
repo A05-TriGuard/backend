@@ -162,16 +162,4 @@ public class MedicineController {
         simpleMedicineInfoVOS.sort((o1, o2) -> o2.getId() - o1.getId());
         return RestBean.success(simpleMedicineInfoVOS);
     }
-
-    // TODO: 2021/10/12 管理员操作
-    /**
-     * 添加药品信息
-     * @return 响应结果
-     */
-    @PostMapping("/create")
-    @Operation(summary = "添加药品信息")
-    public RestBean<Medicine> createMedicine(@RequestBody Medicine medicine){
-        medicineService.save(medicine);
-        return RestBean.success(medicine);
-    }
 }

@@ -9,6 +9,7 @@ import com.triguard.backend.entity.dto.MomentComment;
 import com.triguard.backend.entity.vo.response.Moment.MomentCommentCreateVO;
 import com.triguard.backend.mapper.MomentMapper;
 import com.triguard.backend.service.*;
+import com.triguard.backend.utils.ConstUtils;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -336,7 +337,7 @@ public class MomentServiceImpl extends ServiceImpl<MomentMapper, Moment> impleme
         moment.setAccountId(accountId);
         Account account = accountService.getById(accountId);
         moment.setUsername(account.getUsername());
-        moment.setProfile(account.getProfile());
+        moment.setProfile(account.getProfile() == null ? ConstUtils.DEFAULT_AVATAR : account.getProfile());
         if (images != null && !images.isEmpty()) {
             StringBuilder imageUrls = new StringBuilder();
             for (MultipartFile image : images) {

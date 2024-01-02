@@ -34,4 +34,10 @@ public class AdminAccountController {
     public RestBean<List<Account>> getAccountList() {
         return RestBean.success(accountService.listByMap(Map.of("role", "admin")));
     }
+
+    @GetMapping("/all")
+    @Operation(summary = "获取所有账户列表")
+    public RestBean<List<Account>> getAllAccountList() {
+        return RestBean.success(accountService.list());
+    }
 }

@@ -39,4 +39,6 @@ public final class ConstUtils {
     public static final String REDIS_KEY_EXERCISE = "exercise:";
     // 默认头像
     public static final String DEFAULT_AVATAR = "default_avatar.png";
+    public static final String TEST_JWT_TOKEN = "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJuYW1lIjoiYWRtaW4xIiwiaWQiOjIsImV4cCI6MTcwNDM4OTgwMywiaWF0IjoxNzA0MTMwNjAzLCJqdGkiOiI2ODc4MWUxMy00YjUxLTRiZWYtYjdjMC0zYmRjNWU2MGQzNjAiLCJhdXRob3JpdGllcyI6WyJST0xFX3VzZXIiXX0.00uCztvNsNJw8mFzhNRaDh_6dZ01nYfTL4U7l2bI14I";
+    public static final String TEST_ADMIN_JWT_TOKEN = "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJuYW1lIjoiYWRtaW4iLCJpZCI6MywiZXhwIjoxNzA0NDY4NDAxLCJpYXQiOjE3MDQyMDkyMDEsImp0aSI6ImRiZDk4MGU3LTE0ZTktNGI5ZC1hOTJjLWIzZjc5YjBlYWU4YyIsImF1dGhvcml0aWVzIjpbIlJPTEVfYWRtaW4iXX0.5CFNvmUykbxUmtr3PYsy1lQBxx12YZvVBvoiO24sHvA";
 }

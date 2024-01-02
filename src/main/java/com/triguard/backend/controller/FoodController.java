@@ -159,17 +159,4 @@ public class FoodController {
         simpleFoodInfoVOS.sort((o1, o2) -> o2.getId() - o1.getId());
         return RestBean.success(simpleFoodInfoVOS);
     }
-
-    // TODO: 管理员操作
-    /**
-     * 添加食物
-     * @param food 食物信息
-     * @return 响应结果
-     */
-    @PostMapping("/create")
-    @Operation(summary = "添加食物", description = "添加食物。")
-    public RestBean<Food> createFood(@RequestBody @NotNull Food food){
-        foodService.save(food);
-        return RestBean.success(food);
-    }
 }
