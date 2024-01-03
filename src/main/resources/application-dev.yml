@@ -39,7 +39,7 @@ spring:
       mail-limit: 60
     flow:
       period: 3
-      limit: 5000
+      limit: 500000
       block: 30
     cors:
       origin: '*'
